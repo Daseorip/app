@@ -2,18 +2,10 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#1B2232">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="하루3감사">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>하루3감사</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
@@ -35,14 +27,11 @@
     --radius-lg:28px;
     --radius-md:18px;
     --radius-sm:12px;
-    --safe-top:env(safe-area-inset-top,0px);
-    --safe-bottom:env(safe-area-inset-bottom,0px);
   }
-  *{box-sizing:border-box; -webkit-touch-callout:none;}
-  html,body{margin:0;padding:0; overscroll-behavior-y:none;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
   body{
     min-height:100vh;
-    min-height:100dvh;
     background:
       radial-gradient(ellipse 900px 500px at 50% -10%, rgba(231,184,78,0.10), transparent 60%),
       radial-gradient(ellipse 700px 600px at 90% 10%, rgba(138,179,116,0.08), transparent 55%),
@@ -53,27 +42,21 @@
     justify-content:center;
     padding:0;
     -webkit-tap-highlight-color:transparent;
-    overscroll-behavior-y:none;
   }
   .app{
     width:100%;
     max-width:460px;
     min-height:100vh;
-    min-height:100dvh;
     background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent 220px);
     position:relative;
     display:flex;
     flex-direction:column;
-    padding:calc(28px + var(--safe-top)) 22px calc(100px + var(--safe-bottom));
+    padding:28px 22px 100px;
   }
-  .serif{font-family:'Gowun Batang', serif;}
-  h1,h2,h3{font-family:'Gowun Batang', serif; margin:0; font-weight:600;}
+  .serif{font-family:'Noto Serif KR', serif;}
+  h1,h2,h3{font-family:'Noto Serif KR', serif; margin:0; font-weight:600;}
   p{margin:0;}
   ::selection{background:rgba(231,184,78,0.35);}
-  button, .back-btn, .nav-chip, .tag-chip, .pin-key, .mood-face, .cta-primary, .submit-btn, .fs-btn, .filter-chip, .switch, .ex-chip{
-    touch-action:manipulation;
-  }
-  input, textarea{ font-size:16px; } /* iOS 자동 확대 방지용 최소 16px */
 
   /* Top bar */
   .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;}
@@ -111,7 +94,7 @@
     border:none; border-radius:100px;
     background:linear-gradient(180deg, #F0C664, var(--gold-dim));
     color:#26200F;
-    font-family:'Gowun Batang', serif;
+    font-family:'Noto Serif KR', serif;
     font-size:16.5px; font-weight:600;
     cursor:pointer;
     box-shadow:0 10px 24px rgba(231,184,78,0.28);
@@ -138,7 +121,6 @@
     cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:6px;
     transition:background .15s ease, color .15s ease;
-    min-height:44px;
   }
   .nav-chip svg{width:18px;height:18px;}
   .nav-chip:active{background:var(--bg-card);}
@@ -161,14 +143,14 @@
     background:radial-gradient(circle, rgba(231,184,78,0.14), transparent 70%);
   }
   .flashback .fb-label{font-size:12px; color:var(--gold); font-weight:600; letter-spacing:0.02em;}
-  .flashback .fb-text{margin-top:8px; font-size:15.5px; color:var(--text); line-height:1.7; font-family:'Gaegu', 'Gowun Batang', serif;}
+  .flashback .fb-text{margin-top:8px; font-size:14px; color:var(--text); line-height:1.6;}
 
   /* ---------- Write view ---------- */
   .view-header{
     display:flex; align-items:center; gap:12px; margin-bottom:22px;
   }
   .back-btn{
-    width:40px; height:40px; border-radius:50%;
+    width:36px; height:36px; border-radius:50%;
     background:var(--bg-panel); border:1px solid var(--border);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer; flex-shrink:0; color:var(--text);
@@ -181,7 +163,7 @@
     background:var(--bg-card-2); color:var(--gold);
     font-size:11.5px; font-weight:700;
     display:flex; align-items:center; justify-content:center;
-    font-family:'Gowun Batang',serif;
+    font-family:'Noto Serif KR',serif;
   }
   .gratitude-input{
     width:100%;
@@ -213,7 +195,7 @@
     margin-top:26px; width:100%; padding:16px;
     border:none; border-radius:100px;
     background:linear-gradient(180deg, #F0C664, var(--gold-dim));
-    color:#26200F; font-family:'Gowun Batang',serif; font-weight:600; font-size:16px;
+    color:#26200F; font-family:'Noto Serif KR',serif; font-weight:600; font-size:16px;
     cursor:pointer;
   }
   .submit-btn[disabled]{background:var(--bg-card-2); color:var(--text-dim); cursor:default;}
@@ -245,7 +227,7 @@
   .card-detail .cd-tag{margin-top:6px; font-size:12px; color:var(--text-dim);}
   .card-detail ul{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:14px;}
   .card-detail li{
-    font-family:'Gowun Batang', serif; font-size:15.5px; line-height:1.65; color:var(--text);
+    font-family:'Noto Serif KR', serif; font-size:15.5px; line-height:1.65; color:var(--text);
     padding-left:20px; position:relative;
   }
   .card-detail li::before{
@@ -264,11 +246,11 @@
     display:flex; align-items:center; justify-content:center; gap:18px; margin:6px 0 20px;
   }
   .month-switch button{
-    width:36px; height:36px; border-radius:50%; border:1px solid var(--border);
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--border);
     background:var(--bg-panel); color:var(--text); cursor:pointer;
     display:flex; align-items:center; justify-content:center;
   }
-  .month-switch .m-label{font-size:16px; font-family:'Gowun Batang',serif; min-width:100px; text-align:center;}
+  .month-switch .m-label{font-size:16px; font-family:'Noto Serif KR',serif; min-width:100px; text-align:center;}
   .chart-wrap{
     background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-lg);
     padding:22px; display:flex; flex-direction:column; align-items:center;
@@ -279,7 +261,7 @@
     position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
     text-align:center;
   }
-  .chart-center-label .num{font-family:'Gowun Batang',serif; font-size:26px; color:var(--text);}
+  .chart-center-label .num{font-family:'Noto Serif KR',serif; font-size:26px; color:var(--text);}
   .chart-center-label .lbl{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
   .legend{width:100%; margin-top:22px; display:flex; flex-direction:column; gap:10px;}
   .legend-item{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--text-muted);}
@@ -313,7 +295,10 @@
   }
 
   /* ---------- PIN screens ---------- */
-  #view-pinlock, #view-pinset{align-items:center; text-align:center; justify-content:center; padding-top:0;}
+  #view-pinlock, #view-pinset, #view-pinrecover{align-items:center; text-align:center; justify-content:center; padding-top:0;}
+  #pinsetPadStage, #pinsetQuestionStage{
+    display:flex; flex-direction:column; align-items:center; width:100%;
+  }
   .pin-title{font-size:19px; margin-top:8px;}
   .pin-sub{color:var(--text-muted); font-size:13.5px; margin-top:8px;}
   .pin-dots{display:flex; gap:16px; margin:36px 0;}
@@ -323,7 +308,7 @@
   .pin-pad{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:100%; max-width:280px;}
   .pin-key{
     aspect-ratio:1; border-radius:50%; background:var(--bg-panel); border:1px solid var(--border);
-    color:var(--text); font-size:20px; font-family:'Gowun Batang',serif; cursor:pointer;
+    color:var(--text); font-size:20px; font-family:'Noto Serif KR',serif; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
   }
   .pin-key:active{background:var(--bg-card);}
@@ -347,15 +332,14 @@
   .popup .p-close{
     margin-top:22px; width:100%; padding:13px; border-radius:100px; border:none;
     background:linear-gradient(180deg, #F0C664, var(--gold-dim)); color:#26200F;
-    font-weight:600; font-size:14.5px; cursor:pointer; font-family:'Gowun Batang',serif;
+    font-weight:600; font-size:14.5px; cursor:pointer; font-family:'Noto Serif KR',serif;
   }
 
   .toast{
-    position:fixed; bottom:calc(28px + var(--safe-bottom)); left:50%; transform:translateX(-50%) translateY(20px);
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px);
     background:var(--bg-card); border:1px solid var(--border); color:var(--text);
     padding:12px 20px; border-radius:100px; font-size:13.5px; opacity:0; pointer-events:none;
     transition:all .25s ease; z-index:60; white-space:nowrap;
-    max-width:90vw; overflow:hidden; text-overflow:ellipsis;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
@@ -404,7 +388,7 @@
   .search-box{
     width:100%; padding:12px 15px; border-radius:100px;
     background:var(--bg-panel); border:1px solid var(--border); color:var(--text);
-    font-size:16px; margin-bottom:10px;
+    font-size:14px; margin-bottom:10px;
   }
   .search-box::placeholder{color:var(--text-dim);}
   .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
@@ -431,11 +415,61 @@
   .garden-tree-mini{width:22px; height:22px; opacity:0.9;}
   .garden-tree-mini svg{width:100%; height:100%; display:block;}
 
+  .theme-tag{
+    margin-top:14px; display:inline-flex; align-items:center; gap:6px;
+    padding:6px 14px; border-radius:100px; background:var(--bg-panel); border:1px solid var(--border);
+    color:var(--text-muted); font-size:12.5px;
+  }
+  .garden-btn{
+    margin-top:12px; width:100%; padding:14px; border-radius:16px;
+    background:var(--bg-panel); border:1px solid var(--border); color:var(--gold);
+    font-size:14px; font-weight:600; cursor:pointer; text-align:center;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .garden-btn:active{background:var(--bg-card);}
+  .garden-btn svg{width:18px; height:18px;}
+
+  /* ---------- My Garden view ---------- */
+  .garden-theme-current{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:24px 20px; text-align:center; margin-top:4px;
+  }
+  .garden-theme-current .gtc-icon{font-size:38px;}
+  .garden-theme-current .gtc-label{margin-top:8px; font-size:18px;}
+  .garden-theme-current .gtc-progress{margin-top:6px; font-size:13px; color:var(--text-muted); line-height:1.6;}
+  .garden-theme-current .gtc-bar{margin-top:14px; height:8px; border-radius:100px; background:var(--bg-card-2); overflow:hidden;}
+  .garden-theme-current .gtc-bar-fill{height:100%; background:linear-gradient(90deg,#F0C664,var(--gold-dim)); border-radius:100px; transition:width .3s ease;}
+  .garden-theme-current .gtc-strip{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:16px;}
+  .garden-theme-current .gtc-strip .garden-tree-mini{width:26px; height:26px;}
+  .garden-theme-current .gtc-empty{color:var(--text-dim); font-size:12.5px;}
+
+  .garden-theme-list{margin-top:18px; display:flex; flex-direction:column; gap:10px;}
+  .theme-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:14px 16px; transition:opacity .15s ease;
+  }
+  .theme-row.locked{opacity:0.45;}
+  .theme-row .tr-icon{font-size:22px; flex-shrink:0;}
+  .theme-row .tr-info{flex:1; min-width:0;}
+  .theme-row .tr-name{font-size:14px; font-weight:600; color:var(--text);}
+  .theme-row .tr-sub{font-size:12px; color:var(--text-dim); margin-top:2px;}
+  .theme-row .tr-status{font-size:11.5px; color:var(--gold); flex-shrink:0;}
+  .theme-row.locked .tr-status{color:var(--text-dim);}
+
+  .freeze-box{
+    margin-top:18px; background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:18px; text-align:center;
+  }
+  .freeze-box .fb-icon2{font-size:26px;}
+  .freeze-box .fb-count{margin-top:6px; font-family:'Noto Serif KR',serif; font-size:19px; color:var(--gold);}
+  .freeze-box .fb-desc{margin-top:8px; font-size:12px; color:var(--text-dim); line-height:1.65;}
+
   /* ---------- Word cloud ---------- */
   .wordcloud{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px; width:100%;}
   .word-pill{
     padding:7px 14px; border-radius:100px; background:var(--bg-card-2);
-    color:var(--text); font-family:'Gowun Batang',serif;
+    color:var(--text); font-family:'Noto Serif KR',serif;
   }
   .section-sub{font-size:12px; color:var(--text-dim); margin-top:20px; text-align:center;}
 
@@ -471,7 +505,7 @@
   .forgot-link{margin-top:22px; font-size:12.5px; color:var(--text-dim); cursor:pointer; text-decoration:underline;}
   .popup .p-actions{display:flex; gap:10px; margin-top:22px;}
   .popup .p-actions button{
-    flex:1; padding:13px; border-radius:100px; font-size:14px; cursor:pointer; font-family:'Gowun Batang',serif;
+    flex:1; padding:13px; border-radius:100px; font-size:14px; cursor:pointer; font-family:'Noto Serif KR',serif;
   }
   .popup .p-cancel{background:var(--bg-card-2); border:1px solid var(--border); color:var(--text);}
   .popup .p-confirm{background:linear-gradient(180deg, #F0C664, var(--gold-dim)); border:none; color:#26200F; font-weight:600;}
@@ -489,7 +523,7 @@
   .fs-preview{
     margin-top:12px; padding:12px 14px; border-radius:12px;
     background:var(--bg-card); color:var(--text);
-    font-family:'Gowun Batang', serif;
+    font-family:'Noto Serif KR', serif;
     font-size:calc(14px * var(--content-scale,1));
     line-height:1.6;
   }
@@ -512,13 +546,35 @@
     <div class="forgot-link" id="forgotPinLink">PIN을 잊으셨나요?</div>
   </div>
 
+  <!-- PIN RECOVER (security question) -->
+  <div class="view" id="view-pinrecover">
+    <div class="serif" style="font-size:32px;">❓</div>
+    <h2 class="pin-title">본인 확인</h2>
+    <p class="pin-sub" id="recoverQuestionText">질문을 불러오는 중이에요</p>
+    <input class="gratitude-input" id="recoverAnswerInput" style="margin-top:22px; text-align:center;" placeholder="답을 입력하세요" maxlength="40">
+    <button class="cta-primary" id="recoverSubmitBtn" style="margin-top:18px;">확인하고 PIN 재설정</button>
+    <div class="forgot-link" id="recoverCancelLink">취소하고 돌아가기</div>
+  </div>
+
   <!-- PIN SET -->
   <div class="view" id="view-pinset">
-    <div class="serif" style="font-size:32px;">🔑</div>
-    <h2 class="pin-title" id="pinsetTitle">새 PIN을 입력하세요</h2>
-    <p class="pin-sub" id="pinsetSub">일기를 보호할 4자리 숫자를 정해주세요</p>
-    <div class="pin-dots" id="setDots"></div>
-    <div class="pin-pad" id="setPad"></div>
+    <div id="pinsetPadStage">
+      <div class="serif" style="font-size:32px;">🔑</div>
+      <h2 class="pin-title" id="pinsetTitle">새 PIN을 입력하세요</h2>
+      <p class="pin-sub" id="pinsetSub">일기를 보호할 4자리 숫자를 정해주세요</p>
+      <div class="pin-dots" id="setDots"></div>
+      <div class="pin-pad" id="setPad"></div>
+    </div>
+    <div id="pinsetQuestionStage" style="display:none; width:100%;">
+      <div class="serif" style="font-size:32px;">🛟</div>
+      <h2 class="pin-title">PIN을 잊었을 때를 위해</h2>
+      <p class="pin-sub">나중에 PIN이 기억나지 않으면 이 질문으로 재설정할 수 있어요</p>
+      <div class="field-label" style="margin-top:20px; justify-content:center;">질문을 골라주세요</div>
+      <div class="tag-row" id="securityQuestionRow" style="justify-content:center;"></div>
+      <div class="field-label" style="margin-top:16px; justify-content:center;">답을 입력해주세요</div>
+      <input class="gratitude-input" id="securityAnswerInput" style="text-align:center;" placeholder="예: 초코라떼" maxlength="40">
+      <button class="cta-primary" id="securityQuestionSubmitBtn" style="margin-top:18px;" disabled>설정 완료</button>
+    </div>
   </div>
 
   <!-- HOME -->
@@ -528,6 +584,7 @@
       <span class="streak" id="streakBadge"></span>
     </div>
 
+    <div class="theme-tag" id="themeTag"></div>
     <div class="tree-wrap" id="treeWrap"></div>
     <p class="tree-caption" id="treeCaption"></p>
 
@@ -536,6 +593,11 @@
     <button class="cta-primary" id="writeBtn">오늘의 감사 쓰기</button>
 
     <div class="garden-strip" id="gardenStrip"></div>
+
+    <div class="garden-btn" id="navGarden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C9 5 9 9 12 12c3-3 3-7 0-10Z"/><path d="M12 12v9M7 21h10"/><path d="M6 10c0 3 2.5 5 6 5"/><path d="M18 10c0 3-2.5 5-6 5"/></svg>
+      나의 정원 보기
+    </div>
 
     <div class="nav-grid">
       <div class="nav-chip" id="navHistory">
@@ -668,6 +730,19 @@
     <div class="badge-grid" id="badgeGrid"></div>
   </div>
 
+  <!-- MY GARDEN -->
+  <div class="view" id="view-garden">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>나의 정원</h2>
+    </div>
+    <div class="garden-theme-current" id="gardenCurrentBox"></div>
+    <div class="garden-theme-list" id="gardenThemeList"></div>
+    <div class="freeze-box" id="freezeBox"></div>
+  </div>
+
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="view-header">
@@ -680,7 +755,7 @@
       <div class="settings-row">
         <div>
           <div class="sr-title">PIN 잠금</div>
-          <div class="sr-sub">기록을 이 기기에서 암호화해요. PIN을 잊으면 복구할 수 없어요.</div>
+          <div class="sr-sub">앱을 열 때 4자리 비밀번호 요구</div>
         </div>
         <div class="switch" id="pinSwitch"><div class="knob"></div></div>
       </div>
@@ -706,7 +781,7 @@
       <div class="settings-row">
         <div>
           <div class="sr-title">기록 내보내기</div>
-          <div class="sr-sub">감사 기록을 JSON 파일로 백업해요 (백업 파일 자체는 암호화되지 않아요)</div>
+          <div class="sr-sub">감사 기록을 JSON 파일로 백업해요</div>
         </div>
         <div class="import-btn" id="exportBtn">내보내기</div>
       </div>
@@ -753,12 +828,12 @@
 <!-- Forgot PIN popup -->
 <div class="overlay" id="forgotPinOverlay">
   <div class="popup">
-    <div class="p-icon">⚠️</div>
-    <h3>정말 초기화할까요?</h3>
-    <p>기록은 PIN으로 암호화되어 있어서, PIN 없이는 저도 복구해드릴 수 없어요. 초기화하면 지금까지 쓴 감사 기록이 영구히 사라지고 새로 시작하게 돼요.</p>
+    <div class="p-icon">🔓</div>
+    <h3>PIN 잠금을 해제할까요?</h3>
+    <p>기록은 사라지지 않아요. 잠금만 해제되고, 설정에서 언제든 새 PIN을 다시 만들 수 있어요.</p>
     <div class="p-actions">
       <button class="p-cancel" id="forgotPinCancel">취소</button>
-      <button class="p-confirm" id="forgotPinConfirm">초기화하기</button>
+      <button class="p-confirm" id="forgotPinConfirm">해제하기</button>
     </div>
   </div>
 </div>
@@ -769,23 +844,19 @@
 (function(){
   "use strict";
 
-  /* ---------------- Storage helpers ----------------
-     localStorage에 영구 저장한다. 브라우저/기기별로 별도 저장되며
-     앱을 완전히 종료했다 다시 열어도 데이터가 남아있다. */
-  const STORAGE_PREFIX = 'haru3gamsa:';
+  /* ---------------- Storage helpers ---------------- */
   async function storageGet(key, fallback){
     try{
-      const raw = window.localStorage.getItem(STORAGE_PREFIX + key);
-      if(raw === null || raw === undefined) return fallback;
-      return JSON.parse(raw);
+      const res = await window.storage.get(key, false);
+      if(!res || res.value === undefined || res.value === null) return fallback;
+      return JSON.parse(res.value);
     }catch(e){
-      console.error('storage get failed', e);
       return fallback;
     }
   }
   async function storageSet(key, value){
     try{
-      window.localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+      await window.storage.set(key, JSON.stringify(value), false);
       return true;
     }catch(e){
       console.error('storage set failed', e);
@@ -793,62 +864,41 @@
     }
   }
 
-  /* ---------------- Encryption helpers ----------------
-     PIN을 그대로 저장하지 않고, PIN + 무작위 salt로 AES-GCM 키를 유도해서
-     기록 전체를 암호화한다. PIN을 모르면 저장소를 직접 열어봐도 내용을
-     복호화할 수 없다(=PIN을 잊으면 개발자도 복구해줄 수 없다는 뜻이기도 함). */
-  function bufToB64(buf){
-    return btoa(String.fromCharCode(...new Uint8Array(buf)));
-  }
-  function b64ToBuf(b64){
-    const bin = atob(b64);
-    const bytes = new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
-    return bytes.buffer;
-  }
-  function randomSaltB64(){
-    return bufToB64(crypto.getRandomValues(new Uint8Array(16)).buffer);
-  }
-  async function deriveKey(pin, saltB64){
-    const enc = new TextEncoder();
-    const baseKey = await crypto.subtle.importKey('raw', enc.encode(pin), {name:'PBKDF2'}, false, ['deriveKey']);
-    return crypto.subtle.deriveKey(
-      { name:'PBKDF2', salt: b64ToBuf(saltB64), iterations:150000, hash:'SHA-256' },
-      baseKey,
-      { name:'AES-GCM', length:256 },
-      false,
-      ['encrypt','decrypt']
-    );
-  }
-  async function encryptJSON(key, obj){
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const enc = new TextEncoder();
-    const cipherBuf = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(JSON.stringify(obj)));
-    return { enc:true, iv: bufToB64(iv.buffer), data: bufToB64(cipherBuf) };
-  }
-  async function decryptJSON(key, payload){
-    const iv = new Uint8Array(b64ToBuf(payload.iv));
-    const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, b64ToBuf(payload.data)); // 키가 틀리면 여기서 예외 발생
-    return JSON.parse(new TextDecoder().decode(plainBuf));
-  }
-  // entries를 PIN 잠금 여부에 맞춰 암호화 또는 평문으로 저장
-  async function saveEntries(){
-    if(settings.pinEnabled && cryptoKey){
-      const payload = await encryptJSON(cryptoKey, entries);
-      await storageSet('entries', payload);
-    } else {
-      await storageSet('entries', entries);
-    }
-  }
-
   /* ---------------- State ---------------- */
   let entries = [];         // [{id,date:'YYYY-MM-DD',texts:[a,b,c],tag,ts}]
-  let settings = { pinEnabled:false, salt:null };
-  let cryptoKey = null;      // 잠금 해제 상태에서만 메모리에 존재하는 AES 키
+  let settings = { pinEnabled:false, pin:null };
+  let garden = { freezeTokens:0, lastFreezeGrantMonth:null, freezeUsedDates:[] };
+
+  /* ---------------- Garden themes & growth ---------------- */
+  const GROWTH_CYCLE = 7;   // entries needed to fully grow one tree/cactus (was 30)
+  const THEME_TARGET = 7;   // full-grown plants needed per theme before the next theme unlocks
+  const FRUIT_REQUIREMENT = 7; // total full-grown plants owned before monthly "fruit" (freeze) starts
+  const THEMES = [
+    {id:'mountain', label:'산',   icon:'⛰️', plant:'tree',   palette:{sage:'#8AB374', sageDeep:'#4F7A44'}},
+    {id:'snow',     label:'설원', icon:'❄️', plant:'tree',   palette:{sage:'#BFE7EC', sageDeep:'#6FA9B8'}},
+    {id:'jungle',   label:'정글', icon:'🌴', plant:'tree',   palette:{sage:'#4F9D5B', sageDeep:'#2C6B39'}},
+    {id:'desert',   label:'사막', icon:'🏜️', plant:'cactus', palette:{sage:'#7FAE6B', sageDeep:'#587F49', sand:'#E3C27C'}}
+  ];
+  function totalFullGrown(){ return Math.floor(entries.length/GROWTH_CYCLE); }
+  function currentThemeIndex(){ return Math.min(Math.floor(totalFullGrown()/THEME_TARGET), THEMES.length-1); }
+  function itemsInCurrentTheme(){
+    const idx = currentThemeIndex();
+    const total = totalFullGrown();
+    if(idx < THEMES.length-1) return total % THEME_TARGET;
+    return total - THEME_TARGET*(THEMES.length-1); // last theme (desert) keeps growing without limit
+  }
   let unlocked = false;
   let pendingPinBuffer = '';
-  let pinSetupStage = 'create'; // create -> confirm
+  let pinSetupStage = 'create'; // create -> confirm -> question
   let pinSetupFirst = '';
+  let pinSetupReturnView = 'settings'; // 'settings' or 'home' (after recovery)
+  let selectedSecurityQuestion = null;
+
+  const SECURITY_QUESTIONS = [
+    '가장 좋아하는 음식은?',
+    '가장 좋아하는 동물은?',
+    '예전에 속했던 동아리는?'
+  ];
   let reportMonthOffset = 0; // 0 = current month
   let calMonthOffset = 0;
   let currentDetailEntry = null;
@@ -929,17 +979,18 @@
     setTimeout(()=>t.classList.remove('show'), 2200);
   }
 
-  /* ---------------- Tree growth ---------------- */
+  /* ---------------- Tree / cactus growth ---------------- */
   function treeStage(count){
     if(count<=0) return 0; // seed
-    if(count<7) return 1;  // sprout
-    if(count<30) return 2; // small tree
-    return 3;              // full tree
+    if(count<3) return 1;  // sprout (day 1-2)
+    if(count<GROWTH_CYCLE) return 2; // small plant (day 3-6)
+    return 3;              // full-grown (shown for completed garden items)
   }
   const TREE_LABELS = ['씨앗','새싹','작은 나무','풍성한 나무'];
+  const CACTUS_LABELS = ['씨앗','새싹','작은 선인장','풍성한 선인장'];
 
-  function svgTree(stage){
-    const gold='#E7B84E', sage='#8AB374', sageDeep='#4F7A44', pot='#3B4560';
+  function svgTree(stage, palette){
+    const gold='#E7B84E', sage=(palette&&palette.sage)||'#8AB374', sageDeep=(palette&&palette.sageDeep)||'#4F7A44', pot='#3B4560';
     if(stage===0){
       return `<svg width="140" height="140" viewBox="0 0 140 140">
         <ellipse cx="70" cy="118" rx="34" ry="8" fill="${pot}" opacity="0.5"/>
@@ -983,17 +1034,64 @@
     </svg>`;
   }
 
+  function svgCactus(stage, palette){
+    const gold='#E7B84E', sage=(palette&&palette.sage)||'#7FAE6B', sageDeep=(palette&&palette.sageDeep)||'#587F49',
+          sand=(palette&&palette.sand)||'#E3C27C', pot='#3B4560';
+    if(stage===0){
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <ellipse cx="70" cy="118" rx="34" ry="8" fill="${pot}" opacity="0.5"/>
+        <ellipse cx="70" cy="109" rx="16" ry="7" fill="${sand}"/>
+        <ellipse cx="70" cy="101" rx="4" ry="6" fill="${sage}"/>
+      </svg>`;
+    }
+    if(stage===1){
+      return `<svg width="150" height="150" viewBox="0 0 150 150">
+        <ellipse cx="75" cy="126" rx="38" ry="8" fill="${pot}" opacity="0.5"/>
+        <ellipse cx="75" cy="118" rx="18" ry="8" fill="${sand}"/>
+        <rect x="65" y="92" width="20" height="30" rx="10" fill="${sage}"/>
+      </svg>`;
+    }
+    if(stage===2){
+      return `<svg width="170" height="170" viewBox="0 0 170 170">
+        <ellipse cx="85" cy="146" rx="46" ry="9" fill="${pot}" opacity="0.5"/>
+        <ellipse cx="85" cy="136" rx="22" ry="9" fill="${sand}"/>
+        <rect x="72" y="90" width="26" height="50" rx="13" fill="${sage}"/>
+        <rect x="94" y="104" width="16" height="28" rx="8" fill="${sageDeep}"/>
+      </svg>`;
+    }
+    return `<svg width="200" height="200" viewBox="0 0 200 200">
+      <ellipse cx="100" cy="176" rx="58" ry="10" fill="${pot}" opacity="0.5"/>
+      <ellipse cx="100" cy="164" rx="28" ry="10" fill="${sand}"/>
+      <rect x="84" y="66" width="32" height="102" rx="16" fill="${sage}"/>
+      <rect x="54" y="90" width="20" height="56" rx="10" fill="${sageDeep}"/>
+      <rect x="126" y="76" width="20" height="62" rx="10" fill="${sageDeep}"/>
+      <circle cx="100" cy="68" r="8" fill="${gold}"/>
+      <circle cx="64" cy="92" r="6" fill="${gold}"/>
+      <circle cx="136" cy="78" r="6" fill="${gold}"/>
+    </svg>`;
+  }
+
+  function svgPlant(stage, theme){
+    theme = theme || THEMES[0];
+    return theme.plant==='cactus' ? svgCactus(stage, theme.palette) : svgTree(stage, theme.palette);
+  }
+  function plantLabels(theme){
+    return (theme && theme.plant==='cactus') ? CACTUS_LABELS : TREE_LABELS;
+  }
+
   function calcStreak(list){
     if(list.length===0) return 0;
     const dateSet = new Set(list.map(e=>e.date));
+    const frozenSet = new Set(garden.freezeUsedDates||[]);
     let streak=0;
     let cursor = new Date();
     // if no entry today, start checking from yesterday
     if(!dateSet.has(todayStr(cursor))){
       cursor.setDate(cursor.getDate()-1);
     }
-    while(dateSet.has(todayStr(cursor))){
-      streak++;
+    // a frozen (일시멈춤) date doesn't add to the count, but keeps the chain from breaking
+    while(dateSet.has(todayStr(cursor)) || frozenSet.has(todayStr(cursor))){
+      if(dateSet.has(todayStr(cursor))) streak++;
       cursor.setDate(cursor.getDate()-1);
     }
     return streak;
@@ -1013,6 +1111,59 @@
     return best;
   }
 
+  /* ---------------- Streak freeze (일시멈춤) ---------------- */
+  function monthKey(d){
+    d = d || new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  }
+
+  // Once a month, if the person owns enough full-grown trees/cacti, the "tree" bears
+  // fruit and grants one freeze token — like the picture of the apple tree.
+  async function maintainMonthlyFruit(){
+    if(totalFullGrown() < FRUIT_REQUIREMENT) return;
+    const mk = monthKey();
+    if(garden.lastFreezeGrantMonth === mk) return;
+    garden.freezeTokens = (garden.freezeTokens||0) + 1;
+    garden.lastFreezeGrantMonth = mk;
+    await storageSet('garden', garden);
+    toast('🍎 나무가 열매를 주었어요! 일시멈춤 1개가 생겼어요');
+  }
+
+  // If a day was missed and a freeze token is available, that day is marked as
+  // "frozen" so the streak keeps going instead of resetting to 0.
+  async function maintainStreakFreeze(){
+    if(entries.length===0) return;
+    if(!garden.freezeTokens || garden.freezeTokens<=0) return;
+    const dateSet = new Set(entries.map(e=>e.date));
+    const frozenSet = new Set(garden.freezeUsedDates||[]);
+    const earliest = entries.reduce((min,e)=> e.date<min?e.date:min, entries[0].date);
+    let cursor = new Date();
+    cursor.setDate(cursor.getDate()-1); // today doesn't need to be filled in yet
+    let changed = false;
+    let guard = 0;
+    while(guard++ < 366){
+      const ds = todayStr(cursor);
+      if(ds < earliest) break;
+      if(dateSet.has(ds) || frozenSet.has(ds)){
+        cursor.setDate(cursor.getDate()-1);
+        continue;
+      }
+      if(garden.freezeTokens > 0){
+        frozenSet.add(ds);
+        garden.freezeTokens--;
+        changed = true;
+        cursor.setDate(cursor.getDate()-1);
+      } else {
+        break; // a real gap with no token left — the streak actually breaks here
+      }
+    }
+    if(changed){
+      garden.freezeUsedDates = Array.from(frozenSet);
+      await storageSet('garden', garden);
+      toast('🧊 일시멈춤 덕분에 기록이 끊기지 않았어요');
+    }
+  }
+
   function hashStr(s){
     let h=0;
     for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; }
@@ -1026,7 +1177,7 @@
       total: entries.length,
       maxStreak: maxStreakEver(entries),
       tagsUsed,
-      treeCount: Math.floor(entries.length/30),
+      treeCount: totalFullGrown(),
       nightEntry
     };
   }
@@ -1040,19 +1191,23 @@
       ? `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-2 5-2 8a4 4 0 0 0 8 0c0-1-.3-2-1-3 2 1 3 3 3 5a6 6 0 0 1-12 0c0-4 3-5 4-10Z"/></svg> ${streak}일 연속`
       : '';
 
-    const treeCount = Math.floor(entries.length/30);
-    const remainder = entries.length % 30;
+    const themeIdx = currentThemeIndex();
+    const theme = THEMES[themeIdx];
+    const itemsHere = itemsInCurrentTheme();
+    const remainder = entries.length % GROWTH_CYCLE;
     const stage = treeStage(remainder);
-    document.getElementById('treeWrap').innerHTML = svgTree(stage);
+    const labels = plantLabels(theme);
+    document.getElementById('treeWrap').innerHTML = svgPlant(stage, theme);
+    document.getElementById('themeTag').innerHTML = `${theme.icon} ${theme.label} 테마`;
     document.getElementById('treeCaption').innerHTML =
       entries.length===0
         ? `아직 심지 않은 <b>씨앗</b>이에요. 첫 감사를 심어보세요.`
-        : `<b>${TREE_LABELS[stage]}</b>(으)로 자랐어요 · 총 ${entries.length}개의 감사`;
+        : `<b>${labels[stage]}</b>(으)로 자랐어요 · 총 ${entries.length}개의 감사`;
 
     const gardenStrip = document.getElementById('gardenStrip');
-    if(treeCount>0){
-      gardenStrip.innerHTML = Array.from({length:treeCount}).map(()=>
-        `<div class="garden-tree-mini">${svgTree(3)}</div>`
+    if(itemsHere>0){
+      gardenStrip.innerHTML = Array.from({length:itemsHere}).map(()=>
+        `<div class="garden-tree-mini">${svgPlant(3, theme)}</div>`
       ).join('');
     } else {
       gardenStrip.innerHTML='';
@@ -1199,15 +1354,16 @@
     };
     entries.push(entry);
     entries.sort((a,b)=> a.date < b.date ? 1 : -1);
-    await saveEntries();
+    await storageSet('entries', entries);
 
     const msg = ENCOURAGE_MSGS[Math.floor(Math.random()*ENCOURAGE_MSGS.length)];
     document.getElementById('encourageText').textContent = msg;
     document.getElementById('encourageOverlay').classList.add('active');
   });
 
-  document.getElementById('encourageClose').addEventListener('click', ()=>{
+  document.getElementById('encourageClose').addEventListener('click', async ()=>{
     document.getElementById('encourageOverlay').classList.remove('active');
+    await maintainMonthlyFruit();
     renderHome();
     showView('home');
 
@@ -1477,6 +1633,61 @@
     }).join('');
   }
 
+  /* ---------------- My Garden ---------------- */
+  document.getElementById('navGarden').addEventListener('click', ()=>{ renderGarden(); showView('garden'); });
+  function renderGarden(){
+    const total = totalFullGrown();
+    const idx = currentThemeIndex();
+    const theme = THEMES[idx];
+    const itemsHere = itemsInCurrentTheme();
+    const isLast = idx === THEMES.length-1;
+    const plantWord = theme.plant==='cactus' ? '선인장' : '나무';
+
+    const box = document.getElementById('gardenCurrentBox');
+    const pct = isLast ? 100 : Math.min(100, Math.round((itemsHere/THEME_TARGET)*100));
+    const progressLine = isLast
+      ? `${plantWord} ${itemsHere}그루를 모았어요 · 마지막 테마예요`
+      : `${plantWord} ${itemsHere}/${THEME_TARGET}그루 · 다음 테마까지 ${THEME_TARGET-itemsHere}그루 남았어요`;
+    const strip = itemsHere>0
+      ? Array.from({length:itemsHere}).map(()=>`<div class="garden-tree-mini">${svgPlant(3, theme)}</div>`).join('')
+      : `<span class="gtc-empty">아직 이 테마에서 모은 ${plantWord}가 없어요</span>`;
+    box.innerHTML = `
+      <div class="gtc-icon">${theme.icon}</div>
+      <div class="gtc-label serif">${theme.label} 테마</div>
+      <div class="gtc-progress">${progressLine}</div>
+      <div class="gtc-bar"><div class="gtc-bar-fill" style="width:${pct}%"></div></div>
+      <div class="gtc-strip">${strip}</div>
+    `;
+
+    const list = document.getElementById('gardenThemeList');
+    list.innerHTML = THEMES.map((t,i)=>{
+      const locked = i>idx;
+      const done = i<idx;
+      const word = t.plant==='cactus' ? '선인장' : '나무';
+      let sub;
+      if(locked) sub = '이전 테마를 다 채우면 열려요';
+      else if(done) sub = `${word} ${THEME_TARGET}/${THEME_TARGET}그루 완성`;
+      else if(i===THEMES.length-1) sub = `${word} ${itemsHere}그루 모으는 중`;
+      else sub = `${word} ${itemsHere}/${THEME_TARGET}그루 모으는 중`;
+      const status = locked ? '잠김' : done ? '완료' : '진행중';
+      return `<div class="theme-row${locked?' locked':''}">
+        <div class="tr-icon">${t.icon}</div>
+        <div class="tr-info">
+          <div class="tr-name">${t.label}</div>
+          <div class="tr-sub">${sub}</div>
+        </div>
+        <div class="tr-status">${status}</div>
+      </div>`;
+    }).join('');
+
+    const freezeBox = document.getElementById('freezeBox');
+    freezeBox.innerHTML = `
+      <div class="fb-icon2">🍎</div>
+      <div class="fb-count">보유한 일시멈춤 ${garden.freezeTokens||0}개</div>
+      <div class="fb-desc">풍성한 ${plantWord}를 포함해 완성한 나무·선인장을 ${FRUIT_REQUIREMENT}그루 이상 모으면, 나무가 열매를 맺듯 매달 일시멈춤이 하나씩 생겨요.<br>하루를 기록하지 못해도 일시멈춤이 있으면 연속 기록이 끊기지 않아요.</div>
+    `;
+  }
+
   /* ---------------- Settings ---------------- */
   document.getElementById('navSettings').addEventListener('click', ()=>{ renderSettings(); showView('settings'); });
   function renderSettings(){
@@ -1520,17 +1731,19 @@
   }
   document.getElementById('pinSwitch').addEventListener('click', async ()=>{
     if(settings.pinEnabled){
-      settings.pinEnabled=false;
-      settings.salt=null;
-      cryptoKey=null;
+      settings.pinEnabled=false; settings.pin=null;
+      settings.securityQuestion=null; settings.securityAnswer=null;
       await storageSet('settings', settings);
-      await storageSet('entries', entries); // 암호화 해제 -> 평문으로 재저장
       renderSettings();
-      toast('PIN 잠금과 암호화를 해제했어요');
+      toast('PIN 잠금을 해제했어요');
     } else {
       pinSetupStage='create'; pinSetupFirst=''; pendingPinBuffer='';
+      pinSetupReturnView='settings';
+      selectedSecurityQuestion=null;
       document.getElementById('pinsetTitle').textContent='새 PIN을 입력하세요';
       document.getElementById('pinsetSub').textContent='일기를 보호할 4자리 숫자를 정해주세요';
+      document.getElementById('pinsetQuestionStage').style.display='none';
+      document.getElementById('pinsetPadStage').style.display='flex';
       renderPinDots('setDots',0,false);
       showView('pinset');
     }
@@ -1538,7 +1751,7 @@
   document.getElementById('clearDataBtn').addEventListener('click', async ()=>{
     if(confirm('정말 모든 감사 기록을 삭제할까요? 이 작업은 되돌릴 수 없어요.')){
       entries=[];
-      await saveEntries();
+      await storageSet('entries', entries);
       renderHome();
       toast('모든 기록을 삭제했어요');
       showView('home');
@@ -1569,17 +1782,37 @@
         const data = JSON.parse(ev.target.result);
         const incoming = Array.isArray(data) ? data : data.entries;
         if(!Array.isArray(incoming)) throw new Error('invalid');
-        const existingIds = new Set(entries.map(e=>e.id));
+
+        // A test-tool backup can include { replaceEntries:true } to overwrite
+        // instead of merge, which makes it easy to set up an exact scenario.
         let added = 0;
-        incoming.forEach(item=>{
-          if(item && item.id && item.date && Array.isArray(item.texts) && !existingIds.has(item.id)){
-            entries.push(item);
-            existingIds.add(item.id);
-            added++;
-          }
-        });
+        if(!Array.isArray(data) && data.replaceEntries){
+          entries = incoming.filter(item=> item && item.id && item.date && Array.isArray(item.texts));
+          added = entries.length;
+        } else {
+          const existingIds = new Set(entries.map(e=>e.id));
+          incoming.forEach(item=>{
+            if(item && item.id && item.date && Array.isArray(item.texts) && !existingIds.has(item.id)){
+              entries.push(item);
+              existingIds.add(item.id);
+              added++;
+            }
+          });
+        }
         entries.sort((a,b)=> a.date < b.date ? 1 : -1);
-        await saveEntries();
+        await storageSet('entries', entries);
+
+        // A test-tool backup can also carry the garden/freeze state (not part of
+        // the normal export), so QA can set up theme + freeze scenarios in one file.
+        if(!Array.isArray(data) && data.garden && typeof data.garden==='object'){
+          garden = {
+            freezeTokens: Number.isFinite(data.garden.freezeTokens) ? data.garden.freezeTokens : (garden.freezeTokens||0),
+            lastFreezeGrantMonth: data.garden.lastFreezeGrantMonth !== undefined ? data.garden.lastFreezeGrantMonth : garden.lastFreezeGrantMonth,
+            freezeUsedDates: Array.isArray(data.garden.freezeUsedDates) ? data.garden.freezeUsedDates : (garden.freezeUsedDates||[])
+          };
+          await storageSet('garden', garden);
+        }
+
         toast(`${added}개의 기록을 불러왔어요`);
         renderHome();
       }catch(err){
@@ -1590,27 +1823,92 @@
     reader.readAsText(file);
   });
 
-  /* ---------------- Forgot PIN ---------------- */
+  /* ---------------- Forgot PIN (security question) ---------------- */
+  function renderSecurityQuestionRow(){
+    const row = document.getElementById('securityQuestionRow');
+    row.innerHTML='';
+    SECURITY_QUESTIONS.forEach(q=>{
+      const chip = document.createElement('div');
+      chip.className='tag-chip'+(selectedSecurityQuestion===q?' selected':'');
+      chip.textContent = q.replace('은?','').replace('는?','');
+      chip.addEventListener('click', ()=>{
+        selectedSecurityQuestion = q;
+        renderSecurityQuestionRow();
+        validateSecurityQuestionForm();
+      });
+      row.appendChild(chip);
+    });
+  }
+  function validateSecurityQuestionForm(){
+    const answer = document.getElementById('securityAnswerInput').value.trim();
+    document.getElementById('securityQuestionSubmitBtn').disabled = !(selectedSecurityQuestion && answer);
+  }
+  document.getElementById('securityAnswerInput').addEventListener('input', validateSecurityQuestionForm);
+
+  document.getElementById('securityQuestionSubmitBtn').addEventListener('click', async ()=>{
+    const answer = document.getElementById('securityAnswerInput').value.trim();
+    if(!selectedSecurityQuestion || !answer) return;
+    settings.pinEnabled = true;
+    settings.pin = pinSetupFirst;
+    settings.securityQuestion = selectedSecurityQuestion;
+    settings.securityAnswer = answer.toLowerCase();
+    await storageSet('settings', settings);
+    pendingPinBuffer=''; pinSetupFirst=''; selectedSecurityQuestion=null;
+    toast('PIN과 확인 질문을 설정했어요');
+    if(pinSetupReturnView === 'home'){
+      unlocked = true;
+      renderHome();
+      showView('home');
+    } else {
+      renderSettings();
+      showView('settings');
+    }
+  });
+
   document.getElementById('forgotPinLink').addEventListener('click', ()=>{
-    document.getElementById('forgotPinOverlay').classList.add('active');
+    if(settings.securityQuestion && settings.securityAnswer){
+      document.getElementById('recoverQuestionText').textContent = settings.securityQuestion;
+      document.getElementById('recoverAnswerInput').value='';
+      showView('pinrecover');
+    } else {
+      // No security question was ever set for this PIN — fall back to a plain confirm.
+      document.getElementById('forgotPinOverlay').classList.add('active');
+    }
+  });
+  document.getElementById('recoverCancelLink').addEventListener('click', ()=>{
+    showView('pinlock');
+  });
+  document.getElementById('recoverSubmitBtn').addEventListener('click', ()=>{
+    const val = document.getElementById('recoverAnswerInput').value.trim().toLowerCase();
+    if(!val){ toast('답을 입력해주세요'); return; }
+    if(val === (settings.securityAnswer||'')){
+      pinSetupStage='create'; pinSetupFirst=''; pendingPinBuffer='';
+      pinSetupReturnView='home';
+      selectedSecurityQuestion=null;
+      document.getElementById('pinsetTitle').textContent='새 PIN을 입력하세요';
+      document.getElementById('pinsetSub').textContent='새로 사용할 4자리 숫자를 정해주세요';
+      document.getElementById('pinsetQuestionStage').style.display='none';
+      document.getElementById('pinsetPadStage').style.display='flex';
+      renderPinDots('setDots',0,false);
+      toast('확인됐어요. 새 PIN을 설정해주세요');
+      showView('pinset');
+    } else {
+      toast('답이 일치하지 않아요');
+    }
   });
   document.getElementById('forgotPinCancel').addEventListener('click', ()=>{
     document.getElementById('forgotPinOverlay').classList.remove('active');
   });
   document.getElementById('forgotPinConfirm').addEventListener('click', async ()=>{
-    // PIN으로 암호화된 기록은 PIN 없이 복호화할 방법이 없다 — 초기화는 곧 기존 기록 삭제를 뜻한다.
-    entries = [];
-    cryptoKey = null;
-    settings.pinEnabled = false;
-    settings.salt = null;
+    settings.pinEnabled=false; settings.pin=null;
+    settings.securityQuestion=null; settings.securityAnswer=null;
     await storageSet('settings', settings);
-    await storageSet('entries', entries);
     document.getElementById('forgotPinOverlay').classList.remove('active');
     unlocked=true;
     pendingPinBuffer='';
     renderHome();
     showView('home');
-    toast('초기화했어요. 암호화됐던 이전 기록은 복구할 수 없어요.');
+    toast('PIN 잠금을 해제했어요. 설정에서 다시 만들 수 있어요.');
   });
 
   /* ---------------- PIN pads ---------------- */
@@ -1640,27 +1938,20 @@
   }
 
   // Lock pad
-  buildPad('lockPad', async (k)=>{
+  buildPad('lockPad', (k)=>{
     if(k==='⌫'){ pendingPinBuffer = pendingPinBuffer.slice(0,-1); renderPinDots('lockDots', pendingPinBuffer.length,false); return; }
     if(pendingPinBuffer.length>=4) return;
     pendingPinBuffer += k;
     renderPinDots('lockDots', pendingPinBuffer.length,false);
     if(pendingPinBuffer.length===4){
-      const pin = pendingPinBuffer;
-      pendingPinBuffer='';
-      try{
-        const key = await deriveKey(pin, settings.salt);
-        const stored = await storageGet('entries', {enc:true, iv:null, data:null});
-        const decrypted = await decryptJSON(key, stored); // PIN이 틀리면 여기서 예외 발생 (인증 실패)
-        cryptoKey = key;
-        entries = Array.isArray(decrypted) ? decrypted : [];
-        entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+      if(pendingPinBuffer===settings.pin){
         unlocked=true;
+        pendingPinBuffer='';
         renderHome();
         showView('home');
-      }catch(e){
+      } else {
         renderPinDots('lockDots',4,true);
-        setTimeout(()=>{ renderPinDots('lockDots',0,false); },500);
+        setTimeout(()=>{ pendingPinBuffer=''; renderPinDots('lockDots',0,false); },500);
         toast('PIN이 일치하지 않아요');
       }
     }
@@ -1682,16 +1973,13 @@
         setTimeout(()=>renderPinDots('setDots',0,false), 200);
       } else {
         if(pendingPinBuffer===pinSetupFirst){
-          const salt = randomSaltB64();
-          cryptoKey = await deriveKey(pinSetupFirst, salt);
-          settings.pinEnabled=true;
-          settings.salt=salt;
-          await storageSet('settings', settings);
-          await saveEntries(); // 지금까지의 기록을 암호화해서 저장
           pendingPinBuffer='';
-          toast('PIN 잠금과 암호화를 설정했어요');
-          renderSettings();
-          showView('settings');
+          pinSetupStage='question';
+          document.getElementById('pinsetPadStage').style.display='none';
+          document.getElementById('pinsetQuestionStage').style.display='flex';
+          renderSecurityQuestionRow();
+          document.getElementById('securityAnswerInput').value='';
+          document.getElementById('securityQuestionSubmitBtn').disabled=true;
         } else {
           renderPinDots('setDots',4,true);
           toast('입력한 PIN이 서로 달라요, 다시 시도해주세요');
@@ -1706,29 +1994,24 @@
     }
   });
 
-  /* ---------------- Service Worker ---------------- */
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', ()=>{
-      navigator.serviceWorker.register('sw.js').catch(()=>{});
-    });
-  }
-
   /* ---------------- Init ---------------- */
   async function init(){
-    settings = await storageGet('settings', {pinEnabled:false, salt:null, fontSize:'md'});
+    entries = await storageGet('entries', []);
+    entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+    settings = await storageGet('settings', {pinEnabled:false, pin:null, fontSize:'md'});
+    garden = await storageGet('garden', {freezeTokens:0, lastFreezeGrantMonth:null, freezeUsedDates:[]});
     applyFontSize(settings.fontSize || 'md');
+
+    await maintainStreakFreeze();
+    await maintainMonthlyFruit();
 
     renderTagRow();
     refreshMoodRows();
-    if(settings.pinEnabled && settings.salt){
-      // PIN 확인 전에는 암호화된 데이터를 복호화하지 않는다 — entries는 빈 상태로 유지.
-      entries = [];
+
+    if(settings.pinEnabled && settings.pin){
       renderPinDots('lockDots',0,false);
       showView('pinlock');
     } else {
-      entries = await storageGet('entries', []);
-      if(!Array.isArray(entries)) entries = [];
-      entries.sort((a,b)=> a.date < b.date ? 1 : -1);
       renderHome();
       showView('home');
     }
