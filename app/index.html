@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1B2232">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="하루3감사">
+<meta name="mobile-web-app-capable" content="yes">
+<title>하루3감사</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg:#1B2232;
+    --bg-panel:#232C40;
+    --bg-card:#2B354C;
+    --bg-card-2:#313C56;
+    --text:#F1ECDF;
+    --text-muted:#A6ABC2;
+    --text-dim:#7C8299;
+    --gold:#E7B84E;
+    --gold-dim:#C9973A;
+    --sage:#8AB374;
+    --sage-deep:#4F7A44;
+    --rose:#CE8E92;
+    --border:rgba(241,236,223,0.11);
+    --shadow:0 18px 40px rgba(6,9,18,0.45);
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:12px;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box; -webkit-touch-callout:none;}
+  html,body{margin:0;padding:0; overscroll-behavior-y:none;}
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(231,184,78,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 600px at 90% 10%, rgba(138,179,116,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans KR', sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+    overscroll-behavior-y:none;
+  }
+  .app{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    min-height:100dvh;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent 220px);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    padding:calc(28px + var(--safe-top)) 22px calc(100px + var(--safe-bottom));
+  }
+  .serif{font-family:'Gowun Batang', serif;}
+  h1,h2,h3{font-family:'Gowun Batang', serif; margin:0; font-weight:600;}
+  p{margin:0;}
+  ::selection{background:rgba(231,184,78,0.35);}
+  button, .back-btn, .nav-chip, .tag-chip, .pin-key, .mood-face, .cta-primary, .submit-btn, .fs-btn, .filter-chip, .switch, .ex-chip{
+    touch-action:manipulation;
+  }
+  input, textarea{ font-size:16px; } /* iOS 자동 확대 방지용 최소 16px */
+
+  /* Top bar */
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;}
+  .topbar .date{color:var(--text-muted); font-size:13.5px; letter-spacing:0.02em;}
+  .topbar .streak{
+    display:flex; align-items:center; gap:6px;
+    color:var(--gold); font-size:13.5px; font-weight:600;
+  }
+  .topbar .streak svg{width:15px;height:15px;}
+
+  .view{display:none; flex-direction:column; flex:1;}
+  .view.active{display:flex;}
+
+  /* ---------- Home view ---------- */
+  #view-home{align-items:center; text-align:center; padding-top:6px;}
+  .tree-wrap{
+    margin-top:18px;
+    width:220px; height:220px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .tree-wrap::before{
+    content:'';
+    position:absolute; bottom:6px; left:50%; transform:translateX(-50%);
+    width:150px; height:22px;
+    background:radial-gradient(ellipse, rgba(0,0,0,0.35), transparent 70%);
+  }
+  .tree-caption{margin-top:14px; color:var(--text-muted); font-size:14.5px; line-height:1.6;}
+  .tree-caption b{color:var(--text); font-weight:600;}
+
+  .cta-primary{
+    margin-top:30px;
+    width:100%;
+    padding:17px 20px;
+    border:none; border-radius:100px;
+    background:linear-gradient(180deg, #F0C664, var(--gold-dim));
+    color:#26200F;
+    font-family:'Gowun Batang', serif;
+    font-size:16.5px; font-weight:600;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(231,184,78,0.28);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .cta-primary:active{transform:scale(0.97); box-shadow:0 6px 14px rgba(231,184,78,0.22);}
+  .cta-primary[disabled]{
+    background:var(--bg-card-2); color:var(--text-dim); box-shadow:none; cursor:default;
+  }
+
+  .nav-row{
+    margin-top:16px;
+    display:flex; gap:10px; width:100%;
+  }
+  .nav-chip{
+    flex:1;
+    padding:13px 8px;
+    border-radius:16px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    color:var(--text-muted);
+    font-size:12.8px;
+    text-align:center;
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    transition:background .15s ease, color .15s ease;
+    min-height:44px;
+  }
+  .nav-chip svg{width:18px;height:18px;}
+  .nav-chip:active{background:var(--bg-card);}
+  .nav-chip.active-nav{color:var(--gold); border-color:rgba(231,184,78,0.35);}
+
+  /* Flashback card */
+  .flashback{
+    margin-top:22px; width:100%;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:16px 18px;
+    text-align:left;
+    position:relative;
+    overflow:hidden;
+  }
+  .flashback::after{
+    content:'';
+    position:absolute; top:-30px; right:-30px; width:100px;height:100px;border-radius:50%;
+    background:radial-gradient(circle, rgba(231,184,78,0.14), transparent 70%);
+  }
+  .flashback .fb-label{font-size:12px; color:var(--gold); font-weight:600; letter-spacing:0.02em;}
+  .flashback .fb-text{margin-top:8px; font-size:15.5px; color:var(--text); line-height:1.7; font-family:'Gaegu', 'Gowun Batang', serif;}
+
+  /* ---------- Write view ---------- */
+  .view-header{
+    display:flex; align-items:center; gap:12px; margin-bottom:22px;
+  }
+  .back-btn{
+    width:40px; height:40px; border-radius:50%;
+    background:var(--bg-panel); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0; color:var(--text);
+  }
+  .view-header h2{font-size:20px;}
+
+  .field-label{font-size:13px; color:var(--text-muted); margin:18px 0 8px; display:flex; align-items:center; gap:8px;}
+  .field-num{
+    width:20px; height:20px; border-radius:50%;
+    background:var(--bg-card-2); color:var(--gold);
+    font-size:11.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Gowun Batang',serif;
+  }
+  .gratitude-input{
+    width:100%;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:14px 15px;
+    color:var(--text);
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:15px;
+    resize:none;
+    line-height:1.5;
+  }
+  .gratitude-input:focus{outline:none; border-color:rgba(231,184,78,0.45); background:var(--bg-card);}
+  .gratitude-input::placeholder{color:var(--text-dim);}
+
+  .tag-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .tag-chip{
+    padding:10px 16px; border-radius:100px;
+    background:var(--bg-panel); border:1px solid var(--border);
+    color:var(--text-muted); font-size:13.5px; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .tag-chip.selected{
+    background:rgba(231,184,78,0.16); border-color:var(--gold-dim); color:var(--gold);
+  }
+
+  .submit-btn{
+    margin-top:26px; width:100%; padding:16px;
+    border:none; border-radius:100px;
+    background:linear-gradient(180deg, #F0C664, var(--gold-dim));
+    color:#26200F; font-family:'Gowun Batang',serif; font-weight:600; font-size:16px;
+    cursor:pointer;
+  }
+  .submit-btn[disabled]{background:var(--bg-card-2); color:var(--text-dim); cursor:default;}
+
+  /* ---------- History view ---------- */
+  .history-list{display:flex; flex-direction:column; gap:12px; margin-top:4px;}
+  .empty-state{
+    margin-top:60px; text-align:center; color:var(--text-dim); font-size:14px; line-height:1.7;
+  }
+  .entry-card{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:16px 18px; cursor:pointer;
+  }
+  .entry-card .ec-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .entry-card .ec-date{font-size:12.5px; color:var(--text-dim);}
+  .entry-card .ec-tag{font-size:11.5px; padding:4px 10px; border-radius:100px; background:var(--bg-card-2); color:var(--sage);}
+  .entry-card .ec-line{font-size:14px; color:var(--text); line-height:1.6; margin-top:3px;}
+  .entry-card .ec-line:first-of-type{margin-top:0;}
+
+  /* Entry detail / card */
+  .card-detail{
+    background:linear-gradient(165deg, #2E3852, #232B40);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:28px 24px;
+    margin-top:6px;
+  }
+  .card-detail .cd-date{font-size:12.5px; color:var(--gold); letter-spacing:0.03em;}
+  .card-detail .cd-tag{margin-top:6px; font-size:12px; color:var(--text-dim);}
+  .card-detail ul{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:14px;}
+  .card-detail li{
+    font-family:'Gowun Batang', serif; font-size:15.5px; line-height:1.65; color:var(--text);
+    padding-left:20px; position:relative;
+  }
+  .card-detail li::before{
+    content:'·'; position:absolute; left:2px; top:-2px; color:var(--gold); font-size:22px;
+  }
+  .card-detail .cd-brand{margin-top:26px; text-align:right; font-size:11.5px; color:var(--text-dim); letter-spacing:0.05em;}
+
+  .save-img-btn{
+    margin-top:16px; width:100%; padding:13px; border-radius:100px;
+    background:var(--bg-panel); border:1px solid var(--border); color:var(--text);
+    font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  /* ---------- Report view ---------- */
+  .month-switch{
+    display:flex; align-items:center; justify-content:center; gap:18px; margin:6px 0 20px;
+  }
+  .month-switch button{
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--border);
+    background:var(--bg-panel); color:var(--text); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .month-switch .m-label{font-size:16px; font-family:'Gowun Batang',serif; min-width:100px; text-align:center;}
+  .chart-wrap{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:22px; display:flex; flex-direction:column; align-items:center;
+  }
+  .chart-canvas-box{width:200px; height:200px; position:relative;}
+  #reportCanvas{width:100%; height:100%;}
+  .chart-center-label{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    text-align:center;
+  }
+  .chart-center-label .num{font-family:'Gowun Batang',serif; font-size:26px; color:var(--text);}
+  .chart-center-label .lbl{font-size:11.5px; color:var(--text-dim); margin-top:2px;}
+  .legend{width:100%; margin-top:22px; display:flex; flex-direction:column; gap:10px;}
+  .legend-item{display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--text-muted);}
+  .legend-dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+  .legend-item .cnt{margin-left:auto; color:var(--text);}
+  .report-empty{margin-top:40px; text-align:center; color:var(--text-dim); font-size:14px; line-height:1.7;}
+
+  /* ---------- Settings view ---------- */
+  .settings-group{margin-top:6px;}
+  .settings-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 4px; border-bottom:1px solid var(--border);
+  }
+  .settings-row:last-child{border-bottom:none;}
+  .settings-row .sr-title{font-size:14.5px; color:var(--text);}
+  .settings-row .sr-sub{font-size:12px; color:var(--text-dim); margin-top:3px;}
+  .switch{
+    width:44px; height:26px; border-radius:100px; background:var(--bg-card-2);
+    position:relative; cursor:pointer; transition:background .15s ease; flex-shrink:0;
+  }
+  .switch.on{background:var(--sage-deep);}
+  .switch .knob{
+    position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%;
+    background:var(--text); transition:left .15s ease;
+  }
+  .switch.on .knob{left:21px;}
+  .danger-btn{
+    margin-top:24px; width:100%; padding:14px; border-radius:100px;
+    background:transparent; border:1px solid rgba(206,142,146,0.4); color:var(--rose);
+    font-size:14px; cursor:pointer;
+  }
+
+  /* ---------- PIN screens ---------- */
+  #view-pinlock, #view-pinset{align-items:center; text-align:center; justify-content:center; padding-top:0;}
+  .pin-title{font-size:19px; margin-top:8px;}
+  .pin-sub{color:var(--text-muted); font-size:13.5px; margin-top:8px;}
+  .pin-dots{display:flex; gap:16px; margin:36px 0;}
+  .pin-dot{width:14px; height:14px; border-radius:50%; border:1.5px solid var(--text-dim); transition:all .12s ease;}
+  .pin-dot.filled{background:var(--gold); border-color:var(--gold);}
+  .pin-dot.error{background:var(--rose); border-color:var(--rose);}
+  .pin-pad{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:100%; max-width:280px;}
+  .pin-key{
+    aspect-ratio:1; border-radius:50%; background:var(--bg-panel); border:1px solid var(--border);
+    color:var(--text); font-size:20px; font-family:'Gowun Batang',serif; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pin-key:active{background:var(--bg-card);}
+  .pin-key.ghost{background:transparent; border:none; cursor:default;}
+
+  /* ---------- Popups ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(10,13,22,0.72); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:50; padding:24px;
+  }
+  .overlay.active{display:flex;}
+  .popup{
+    background:linear-gradient(165deg, #313C56, #242C40);
+    border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:32px 26px; max-width:340px; width:100%; text-align:center;
+    box-shadow:var(--shadow);
+  }
+  .popup .p-icon{font-size:34px;}
+  .popup h3{font-size:18px; margin-top:14px; line-height:1.5;}
+  .popup p{margin-top:10px; color:var(--text-muted); font-size:13.5px; line-height:1.6;}
+  .popup .p-close{
+    margin-top:22px; width:100%; padding:13px; border-radius:100px; border:none;
+    background:linear-gradient(180deg, #F0C664, var(--gold-dim)); color:#26200F;
+    font-weight:600; font-size:14.5px; cursor:pointer; font-family:'Gowun Batang',serif;
+  }
+
+  .toast{
+    position:fixed; bottom:calc(28px + var(--safe-bottom)); left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--bg-card); border:1px solid var(--border); color:var(--text);
+    padding:12px 20px; border-radius:100px; font-size:13.5px; opacity:0; pointer-events:none;
+    transition:all .25s ease; z-index:60; white-space:nowrap;
+    max-width:90vw; overflow:hidden; text-overflow:ellipsis;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---------- Nav grid (4 chips) ---------- */
+  .nav-grid{
+    margin-top:16px;
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;
+  }
+
+  /* ---------- Mood picker ---------- */
+  .mood-row{display:flex; gap:8px; margin-top:8px;}
+  .mood-face{
+    flex:1; padding:12px 4px; border-radius:14px;
+    background:var(--bg-panel); border:1px solid var(--border);
+    font-size:22px; text-align:center; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .mood-face.selected{background:rgba(231,184,78,0.16); border-color:var(--gold-dim); transform:translateY(-2px);}
+  .soften-note{font-size:12.5px; color:var(--text-dim); margin-top:6px; line-height:1.6;}
+
+  /* ---------- Examples panel ---------- */
+  .examples-toggle{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:9px 14px; border-radius:100px; margin-top:2px;
+    background:var(--bg-panel); border:1px solid var(--border);
+    color:var(--gold); font-size:13px; cursor:pointer;
+  }
+  .examples-panel{
+    display:none; margin-top:14px; padding:16px;
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
+  }
+  .examples-panel.open{display:block;}
+  .examples-panel .ex-hint{font-size:12px; color:var(--text-dim); margin-bottom:10px; line-height:1.6;}
+  .ex-group{margin-bottom:12px;}
+  .ex-group:last-child{margin-bottom:0;}
+  .ex-group .ex-cat{font-size:11.5px; color:var(--sage); margin-bottom:7px; font-weight:600;}
+  .ex-chip{
+    display:block; width:100%; text-align:left;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:10px;
+    color:var(--text-muted); font-size:13px; padding:9px 12px; margin-bottom:6px;
+    cursor:pointer; line-height:1.5;
+  }
+  .ex-chip:active{background:var(--bg-card-2); color:var(--text);}
+
+  /* ---------- History search/filter ---------- */
+  .search-box{
+    width:100%; padding:12px 15px; border-radius:100px;
+    background:var(--bg-panel); border:1px solid var(--border); color:var(--text);
+    font-size:16px; margin-bottom:10px;
+  }
+  .search-box::placeholder{color:var(--text-dim);}
+  .filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
+  .filter-chip{
+    padding:8px 14px; border-radius:100px; font-size:12.5px; cursor:pointer;
+    background:var(--bg-panel); border:1px solid var(--border); color:var(--text-muted);
+  }
+  .filter-chip.selected{background:rgba(231,184,78,0.16); border-color:var(--gold-dim); color:var(--gold);}
+
+  /* ---------- Calendar heatmap ---------- */
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:4px;}
+  .cal-dow{text-align:center; font-size:11.5px; color:var(--text-dim); padding-bottom:4px;}
+  .cal-cell{
+    aspect-ratio:1; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:12.5px; color:var(--text-dim); background:var(--bg-panel); border:1px solid var(--border);
+    cursor:default;
+  }
+  .cal-cell.empty{background:transparent; border:none;}
+  .cal-cell.has-entry{color:#26200F; font-weight:600; cursor:pointer; border-color:transparent;}
+  .cal-cell.today-cell{box-shadow:0 0 0 1.5px var(--gold) inset;}
+
+  /* ---------- Garden strip ---------- */
+  .garden-strip{display:flex; gap:6px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
+  .garden-tree-mini{width:22px; height:22px; opacity:0.9;}
+  .garden-tree-mini svg{width:100%; height:100%; display:block;}
+
+  /* ---------- Word cloud ---------- */
+  .wordcloud{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px; width:100%;}
+  .word-pill{
+    padding:7px 14px; border-radius:100px; background:var(--bg-card-2);
+    color:var(--text); font-family:'Gowun Batang',serif;
+  }
+  .section-sub{font-size:12px; color:var(--text-dim); margin-top:20px; text-align:center;}
+
+  /* ---------- Badges ---------- */
+  .badge-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px;}
+  .badge-card{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:16px 12px; text-align:center; opacity:0.4;
+  }
+  .badge-card.earned{opacity:1; border-color:rgba(231,184,78,0.3);}
+  .badge-card .b-icon{font-size:26px;}
+  .badge-card .b-title{margin-top:8px; font-size:13px; color:var(--text); font-weight:600;}
+  .badge-card .b-desc{margin-top:4px; font-size:11px; color:var(--text-dim); line-height:1.5;}
+
+  /* ---------- Detail action row ---------- */
+  .action-row{display:flex; gap:10px; margin-top:16px;}
+  .action-row .save-img-btn{margin-top:0;}
+
+  /* ---------- Settings extras ---------- */
+  .fontsize-row{display:flex; gap:8px;}
+  .fs-btn{
+    padding:8px 14px; border-radius:100px; background:var(--bg-card-2); border:1px solid var(--border);
+    color:var(--text-muted); font-size:12.5px; cursor:pointer;
+  }
+  .fs-btn.active{background:rgba(231,184,78,0.16); border-color:var(--gold-dim); color:var(--gold);}
+  .settings-link{font-size:13px; color:var(--gold); cursor:pointer;}
+  .import-btn{
+    padding:8px 14px; border-radius:100px; background:var(--bg-card-2); border:1px solid var(--border);
+    color:var(--text-muted); font-size:12.5px; cursor:pointer;
+  }
+
+  /* ---------- Forgot PIN ---------- */
+  .forgot-link{margin-top:22px; font-size:12.5px; color:var(--text-dim); cursor:pointer; text-decoration:underline;}
+  .popup .p-actions{display:flex; gap:10px; margin-top:22px;}
+  .popup .p-actions button{
+    flex:1; padding:13px; border-radius:100px; font-size:14px; cursor:pointer; font-family:'Gowun Batang',serif;
+  }
+  .popup .p-cancel{background:var(--bg-card-2); border:1px solid var(--border); color:var(--text);}
+  .popup .p-confirm{background:linear-gradient(180deg, #F0C664, var(--gold-dim)); border:none; color:#26200F; font-weight:600;}
+
+  /* ---------- Content font scale ---------- */
+  body.fs-sm{--content-scale:0.9;}
+  body.fs-md{--content-scale:1;}
+  body.fs-lg{--content-scale:1.18;}
+  .gratitude-input{font-size:calc(15px * var(--content-scale,1));}
+  .entry-card .ec-line{font-size:calc(14px * var(--content-scale,1));}
+  .card-detail li{font-size:calc(15.5px * var(--content-scale,1));}
+  .tree-caption{font-size:calc(14.5px * var(--content-scale,1));}
+  .flashback .fb-text{font-size:calc(14px * var(--content-scale,1));}
+  .field-label{font-size:calc(13px * var(--content-scale,1));}
+  .fs-preview{
+    margin-top:12px; padding:12px 14px; border-radius:12px;
+    background:var(--bg-card); color:var(--text);
+    font-family:'Gowun Batang', serif;
+    font-size:calc(14px * var(--content-scale,1));
+    line-height:1.6;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- PIN LOCK -->
+  <div class="view" id="view-pinlock">
+    <div class="serif" style="font-size:32px;">🔒</div>
+    <h2 class="pin-title">잠금을 해제해주세요</h2>
+    <p class="pin-sub">4자리 PIN을 입력하세요</p>
+    <div class="pin-dots" id="lockDots"></div>
+    <div class="pin-pad" id="lockPad"></div>
+    <div class="forgot-link" id="forgotPinLink">PIN을 잊으셨나요?</div>
+  </div>
+
+  <!-- PIN SET -->
+  <div class="view" id="view-pinset">
+    <div class="serif" style="font-size:32px;">🔑</div>
+    <h2 class="pin-title" id="pinsetTitle">새 PIN을 입력하세요</h2>
+    <p class="pin-sub" id="pinsetSub">일기를 보호할 4자리 숫자를 정해주세요</p>
+    <div class="pin-dots" id="setDots"></div>
+    <div class="pin-pad" id="setPad"></div>
+  </div>
+
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <div class="topbar" style="width:100%;">
+      <span class="date" id="todayLabel"></span>
+      <span class="streak" id="streakBadge"></span>
+    </div>
+
+    <div class="tree-wrap" id="treeWrap"></div>
+    <p class="tree-caption" id="treeCaption"></p>
+
+    <div class="flashback" id="flashbackCard" style="display:none;"></div>
+
+    <button class="cta-primary" id="writeBtn">오늘의 감사 쓰기</button>
+
+    <div class="garden-strip" id="gardenStrip"></div>
+
+    <div class="nav-grid">
+      <div class="nav-chip" id="navHistory">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+        기록 보기
+      </div>
+      <div class="nav-chip" id="navCalendar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        캘린더
+      </div>
+      <div class="nav-chip" id="navReport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 3"/></svg>
+        감정 리포트
+      </div>
+      <div class="nav-chip" id="navSettings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.3-1a7 7 0 0 0 2 1.2L10 21h4l.4-2.6a7 7 0 0 0 2-1.2l2.3 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2Z"/></svg>
+        설정
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITE -->
+  <div class="view" id="view-write">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>오늘의 감사</h2>
+    </div>
+    <p class="soften-note">오늘 유독 힘들었다면 한 줄만 적어도 괜찮아요.</p>
+
+    <div class="field-label" style="margin-top:16px;">쓰기 전 지금 기분은요?</div>
+    <div class="mood-row" id="moodBeforeRow"></div>
+
+    <div class="examples-toggle" id="examplesToggle">✍️ 예시가 필요하신가요?</div>
+    <div class="examples-panel" id="examplesPanel"></div>
+
+    <div class="field-label" style="margin-top:20px;"><span class="field-num">1</span>오늘 감사했던 순간</div>
+    <textarea class="gratitude-input" id="input1" rows="2" maxlength="120" placeholder="아주 작은 일이어도 괜찮아요"></textarea>
+
+    <div class="field-label"><span class="field-num">2</span>또 하나, 감사한 일 <span style="color:var(--text-dim); font-weight:400;">(선택)</span></div>
+    <textarea class="gratitude-input" id="input2" rows="2" maxlength="120" placeholder="누군가의 말 한마디, 날씨, 무엇이든"></textarea>
+
+    <div class="field-label"><span class="field-num">3</span>마지막 감사 <span style="color:var(--text-dim); font-weight:400;">(선택)</span></div>
+    <textarea class="gratitude-input" id="input3" rows="2" maxlength="120" placeholder="오늘 하루를 떠올려보세요"></textarea>
+
+    <div class="field-label" style="margin-top:20px;">오늘의 감정 <span style="color:var(--text-dim); font-weight:400;">(선택)</span></div>
+    <div class="tag-row" id="tagRow"></div>
+
+    <div class="field-label" style="margin-top:20px;">쓰고 난 지금 기분은요?</div>
+    <div class="mood-row" id="moodAfterRow"></div>
+
+    <button class="submit-btn" id="submitBtn" disabled>기록 완료</button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="view" id="view-history">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>나의 감사 기록</h2>
+    </div>
+    <input class="search-box" id="searchBox" placeholder="기록에서 검색하기">
+    <div class="filter-row" id="filterRow"></div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <!-- ENTRY DETAIL -->
+  <div class="view" id="view-detail">
+    <div class="view-header">
+      <div class="back-btn" data-back="history">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>감사 카드</h2>
+    </div>
+    <div class="card-detail" id="cardDetail"></div>
+    <div class="action-row">
+      <button class="save-img-btn" id="saveImgBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        이미지로 저장
+      </button>
+      <button class="save-img-btn" id="shareBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-3.9M8.6 13.5l6.8 3.9"/></svg>
+        공유하기
+      </button>
+    </div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="view" id="view-report">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>월별 감정 리포트</h2>
+    </div>
+    <div class="month-switch">
+      <button id="prevMonth">‹</button>
+      <span class="m-label" id="monthLabel"></span>
+      <button id="nextMonth">›</button>
+    </div>
+    <div id="reportBody"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="view" id="view-calendar">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>감사 캘린더</h2>
+    </div>
+    <div class="month-switch">
+      <button id="calPrevMonth">‹</button>
+      <span class="m-label" id="calMonthLabel"></span>
+      <button id="calNextMonth">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="view" id="view-badges">
+    <div class="view-header">
+      <div class="back-btn" data-back="settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>나의 배지</h2>
+    </div>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="view" id="view-settings">
+    <div class="view-header">
+      <div class="back-btn" data-back="home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <h2>설정</h2>
+    </div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">PIN 잠금</div>
+          <div class="sr-sub">기록을 이 기기에서 암호화해요. PIN을 잊으면 복구할 수 없어요.</div>
+        </div>
+        <div class="switch" id="pinSwitch"><div class="knob"></div></div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">글자 크기</div>
+          <div class="sr-sub">감사 글 읽고 쓰는 크기를 조절해요</div>
+        </div>
+        <div class="fontsize-row" id="fontsizeRow">
+          <div class="fs-btn" data-fs="sm">작게</div>
+          <div class="fs-btn" data-fs="md">보통</div>
+          <div class="fs-btn" data-fs="lg">크게</div>
+        </div>
+      </div>
+      <div class="fs-preview" id="fsPreview">오늘 마신 커피 한 잔이 참 감사했다 — 이렇게 보여요</div>
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">나의 배지</div>
+          <div class="sr-sub">그동안 쌓은 기록으로 모은 배지를 봐요</div>
+        </div>
+        <div class="settings-link" id="openBadges">보기 →</div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">기록 내보내기</div>
+          <div class="sr-sub">감사 기록을 JSON 파일로 백업해요 (백업 파일 자체는 암호화되지 않아요)</div>
+        </div>
+        <div class="import-btn" id="exportBtn">내보내기</div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">기록 가져오기</div>
+          <div class="sr-sub">백업했던 JSON 파일을 다시 불러와요</div>
+        </div>
+        <div class="import-btn" id="importBtn">가져오기</div>
+        <input type="file" id="importFile" accept="application/json" style="display:none;">
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="sr-title">이 기기에만 저장</div>
+          <div class="sr-sub">서버 없이 안전하게 이 계정에 보관돼요</div>
+        </div>
+      </div>
+    </div>
+    <button class="danger-btn" id="clearDataBtn">모든 기록 삭제</button>
+  </div>
+
+</div>
+
+<!-- Encouragement popup -->
+<div class="overlay" id="encourageOverlay">
+  <div class="popup">
+    <div class="p-icon">🌿</div>
+    <h3 id="encourageText"></h3>
+    <p>오늘도 감사를 기록해주어서 고마워요.</p>
+    <button class="p-close" id="encourageClose">닫기</button>
+  </div>
+</div>
+
+<!-- Streak celebration popup -->
+<div class="overlay" id="streakOverlay">
+  <div class="popup">
+    <div class="p-icon">🎉</div>
+    <h3 id="streakText"></h3>
+    <p id="streakSub"></p>
+    <button class="p-close" id="streakClose">계속하기</button>
+  </div>
+</div>
+
+<!-- Forgot PIN popup -->
+<div class="overlay" id="forgotPinOverlay">
+  <div class="popup">
+    <div class="p-icon">⚠️</div>
+    <h3>정말 초기화할까요?</h3>
+    <p>기록은 PIN으로 암호화되어 있어서, PIN 없이는 저도 복구해드릴 수 없어요. 초기화하면 지금까지 쓴 감사 기록이 영구히 사라지고 새로 시작하게 돼요.</p>
+    <div class="p-actions">
+      <button class="p-cancel" id="forgotPinCancel">취소</button>
+      <button class="p-confirm" id="forgotPinConfirm">초기화하기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Storage helpers ----------------
+     localStorage에 영구 저장한다. 브라우저/기기별로 별도 저장되며
+     앱을 완전히 종료했다 다시 열어도 데이터가 남아있다. */
+  const STORAGE_PREFIX = 'haru3gamsa:';
+  async function storageGet(key, fallback){
+    try{
+      const raw = window.localStorage.getItem(STORAGE_PREFIX + key);
+      if(raw === null || raw === undefined) return fallback;
+      return JSON.parse(raw);
+    }catch(e){
+      console.error('storage get failed', e);
+      return fallback;
+    }
+  }
+  async function storageSet(key, value){
+    try{
+      window.localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+      return true;
+    }catch(e){
+      console.error('storage set failed', e);
+      return false;
+    }
+  }
+
+  /* ---------------- Encryption helpers ----------------
+     PIN을 그대로 저장하지 않고, PIN + 무작위 salt로 AES-GCM 키를 유도해서
+     기록 전체를 암호화한다. PIN을 모르면 저장소를 직접 열어봐도 내용을
+     복호화할 수 없다(=PIN을 잊으면 개발자도 복구해줄 수 없다는 뜻이기도 함). */
+  function bufToB64(buf){
+    return btoa(String.fromCharCode(...new Uint8Array(buf)));
+  }
+  function b64ToBuf(b64){
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return bytes.buffer;
+  }
+  function randomSaltB64(){
+    return bufToB64(crypto.getRandomValues(new Uint8Array(16)).buffer);
+  }
+  async function deriveKey(pin, saltB64){
+    const enc = new TextEncoder();
+    const baseKey = await crypto.subtle.importKey('raw', enc.encode(pin), {name:'PBKDF2'}, false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name:'PBKDF2', salt: b64ToBuf(saltB64), iterations:150000, hash:'SHA-256' },
+      baseKey,
+      { name:'AES-GCM', length:256 },
+      false,
+      ['encrypt','decrypt']
+    );
+  }
+  async function encryptJSON(key, obj){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const enc = new TextEncoder();
+    const cipherBuf = await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, enc.encode(JSON.stringify(obj)));
+    return { enc:true, iv: bufToB64(iv.buffer), data: bufToB64(cipherBuf) };
+  }
+  async function decryptJSON(key, payload){
+    const iv = new Uint8Array(b64ToBuf(payload.iv));
+    const plainBuf = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, b64ToBuf(payload.data)); // 키가 틀리면 여기서 예외 발생
+    return JSON.parse(new TextDecoder().decode(plainBuf));
+  }
+  // entries를 PIN 잠금 여부에 맞춰 암호화 또는 평문으로 저장
+  async function saveEntries(){
+    if(settings.pinEnabled && cryptoKey){
+      const payload = await encryptJSON(cryptoKey, entries);
+      await storageSet('entries', payload);
+    } else {
+      await storageSet('entries', entries);
+    }
+  }
+
+  /* ---------------- State ---------------- */
+  let entries = [];         // [{id,date:'YYYY-MM-DD',texts:[a,b,c],tag,ts}]
+  let settings = { pinEnabled:false, salt:null };
+  let cryptoKey = null;      // 잠금 해제 상태에서만 메모리에 존재하는 AES 키
+  let unlocked = false;
+  let pendingPinBuffer = '';
+  let pinSetupStage = 'create'; // create -> confirm
+  let pinSetupFirst = '';
+  let reportMonthOffset = 0; // 0 = current month
+  let calMonthOffset = 0;
+  let currentDetailEntry = null;
+  let selectedMoodBefore = null;
+  let selectedMoodAfter = null;
+  let historyFilterTag = null;
+  let historySearchTerm = '';
+  let FONT_SCALE = 1;
+
+  const MOODS = [
+    {v:1, e:'😞'}, {v:2, e:'😕'}, {v:3, e:'😐'}, {v:4, e:'🙂'}, {v:5, e:'😊'}
+  ];
+
+  const EXAMPLES = [
+    {cat:'일상', lines:['오늘 마신 커피 한 잔이 유독 맛있었다','창밖 날씨가 맑아서 기분이 좋았다','좋아하는 노래를 들으며 걸었다']},
+    {cat:'관계', lines:['친구가 안부를 물어봐줘서 고마웠다','가족과 짧게라도 통화할 수 있었다','동료가 먼저 도와줘서 힘이 됐다']},
+    {cat:'성취', lines:['미루던 일을 하나 끝냈다','작은 목표를 오늘도 지켰다','어려운 문제를 끝까지 풀어냈다']},
+    {cat:'자기 돌봄', lines:['충분히 잘 수 있어서 감사했다','잠깐이라도 나만의 시간을 가졌다','오늘 하루 애쓴 나 자신에게 고마웠다']}
+  ];
+
+  const BADGES = [
+    {id:'first', icon:'🌱', title:'첫 감사', desc:'첫 기록을 남겼어요', test:(s)=>s.total>=1},
+    {id:'streak7', icon:'🔥', title:'7일의 꾸준함', desc:'7일 연속 기록', test:(s)=>s.maxStreak>=7},
+    {id:'streak30', icon:'🏵️', title:'한 달의 약속', desc:'30일 연속 기록', test:(s)=>s.maxStreak>=30},
+    {id:'allTags', icon:'🎨', title:'감정 다채움', desc:'네 가지 감정을 모두 기록', test:(s)=>s.tagsUsed>=4},
+    {id:'hundred', icon:'💯', title:'100번째 감사', desc:'감사 100개 기록', test:(s)=>s.total>=100},
+    {id:'tree', icon:'🌳', title:'나무의 완성', desc:'나무 한 그루를 다 키웠어요', test:(s)=>s.treeCount>=1},
+    {id:'garden', icon:'🏡', title:'작은 정원사', desc:'나무 세 그루를 심었어요', test:(s)=>s.treeCount>=3},
+    {id:'night', icon:'🌙', title:'밤의 기록', desc:'늦은 밤에도 마음을 살폈어요', test:(s)=>s.nightEntry}
+  ];
+
+  const TAGS = [
+    {id:'sosohan', label:'소소함', color:'#8AB374'},
+    {id:'sungchui', label:'성취감', color:'#E7B84E'},
+    {id:'ando', label:'안도감', color:'#7FA0C9'},
+    {id:'jeulgeoum', label:'즐거움', color:'#CE8E92'}
+  ];
+
+  const ENCOURAGE_MSGS = [
+    '작은 감사가 모여 오늘을 따뜻하게 만들었어요.',
+    '당신의 하루를 알아차려줘서 고마워요.',
+    '오늘도 마음의 결을 잘 살펴보았네요.',
+    '그 순간을 기억해준 당신, 참 다정해요.',
+    '이렇게 쌓인 기록이 언젠가 큰 위로가 될 거예요.',
+    '오늘 하루도 고생 많았어요, 잘 마무리했네요.',
+    '감사한 마음을 알아채는 것도 연습이에요, 잘하고 있어요.'
+  ];
+
+  function todayStr(d){
+    d = d || new Date();
+    const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+  function dateFromStr(s){
+    const [y,m,d]=s.split('-').map(Number);
+    return new Date(y,m-1,d);
+  }
+  function fmtKoreanDate(s){
+    const d = dateFromStr(s);
+    const days=['일','월','화','수','목','금','토'];
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+  }
+
+  /* ---------------- Views ---------------- */
+  function showView(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('[data-back]').forEach(btn=>{
+    btn.addEventListener('click', ()=> showView(btn.getAttribute('data-back')));
+  });
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2200);
+  }
+
+  /* ---------------- Tree growth ---------------- */
+  function treeStage(count){
+    if(count<=0) return 0; // seed
+    if(count<7) return 1;  // sprout
+    if(count<30) return 2; // small tree
+    return 3;              // full tree
+  }
+  const TREE_LABELS = ['씨앗','새싹','작은 나무','풍성한 나무'];
+
+  function svgTree(stage){
+    const gold='#E7B84E', sage='#8AB374', sageDeep='#4F7A44', pot='#3B4560';
+    if(stage===0){
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <ellipse cx="70" cy="118" rx="34" ry="8" fill="${pot}" opacity="0.5"/>
+        <circle cx="70" cy="104" r="10" fill="#7A5C3E"/>
+        <ellipse cx="70" cy="100" rx="4" ry="6" fill="${sage}"/>
+      </svg>`;
+    }
+    if(stage===1){
+      return `<svg width="150" height="150" viewBox="0 0 150 150">
+        <ellipse cx="75" cy="126" rx="38" ry="8" fill="${pot}" opacity="0.5"/>
+        <path d="M75 126 L75 96" stroke="${sageDeep}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M75 108 C60 100 55 90 62 82 C70 90 72 100 75 108 Z" fill="${sage}"/>
+        <path d="M75 104 C90 96 95 86 88 78 C80 86 78 96 75 104 Z" fill="${sage}"/>
+      </svg>`;
+    }
+    if(stage===2){
+      return `<svg width="170" height="170" viewBox="0 0 170 170">
+        <ellipse cx="85" cy="146" rx="46" ry="9" fill="${pot}" opacity="0.5"/>
+        <path d="M85 146 L85 90" stroke="${sageDeep}" stroke-width="7" stroke-linecap="round"/>
+        <path d="M85 118 C60 118 55 100 65 90 C75 100 80 108 85 118 Z" fill="${sage}"/>
+        <path d="M85 112 C110 110 118 92 108 82 C96 90 90 100 85 112 Z" fill="${sage}"/>
+        <circle cx="85" cy="80" r="30" fill="${sage}"/>
+        <circle cx="66" cy="94" r="18" fill="${sageDeep}" opacity="0.85"/>
+        <circle cx="106" cy="92" r="20" fill="${sageDeep}" opacity="0.85"/>
+        <circle cx="88" cy="58" r="20" fill="${sage}"/>
+      </svg>`;
+    }
+    return `<svg width="200" height="200" viewBox="0 0 200 200">
+      <ellipse cx="100" cy="176" rx="58" ry="10" fill="${pot}" opacity="0.5"/>
+      <path d="M100 176 L100 108" stroke="${sageDeep}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M100 140 C65 138 58 112 72 98 C86 112 92 124 100 140 Z" fill="${sage}"/>
+      <path d="M100 132 C136 128 146 100 132 86 C114 98 106 114 100 132 Z" fill="${sage}"/>
+      <circle cx="100" cy="90" r="42" fill="${sage}"/>
+      <circle cx="66" cy="108" r="26" fill="${sageDeep}" opacity="0.88"/>
+      <circle cx="136" cy="106" r="28" fill="${sageDeep}" opacity="0.88"/>
+      <circle cx="108" cy="58" r="28" fill="${sage}"/>
+      <circle cx="72" cy="68" r="20" fill="${sage}" opacity="0.95"/>
+      <circle cx="112" cy="96" r="6" fill="${gold}"/>
+      <circle cx="82" cy="86" r="5" fill="${gold}"/>
+      <circle cx="96" cy="60" r="5" fill="${gold}"/>
+    </svg>`;
+  }
+
+  function calcStreak(list){
+    if(list.length===0) return 0;
+    const dateSet = new Set(list.map(e=>e.date));
+    let streak=0;
+    let cursor = new Date();
+    // if no entry today, start checking from yesterday
+    if(!dateSet.has(todayStr(cursor))){
+      cursor.setDate(cursor.getDate()-1);
+    }
+    while(dateSet.has(todayStr(cursor))){
+      streak++;
+      cursor.setDate(cursor.getDate()-1);
+    }
+    return streak;
+  }
+
+  function maxStreakEver(list){
+    if(list.length===0) return 0;
+    const uniqueDates = [...new Set(list.map(e=>e.date))].sort();
+    let best=1, run=1;
+    for(let i=1;i<uniqueDates.length;i++){
+      const prev = dateFromStr(uniqueDates[i-1]);
+      const cur = dateFromStr(uniqueDates[i]);
+      const diffDays = Math.round((cur-prev)/86400000);
+      if(diffDays===1){ run++; best=Math.max(best,run); }
+      else { run=1; }
+    }
+    return best;
+  }
+
+  function hashStr(s){
+    let h=0;
+    for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; }
+    return Math.abs(h);
+  }
+
+  function computeStats(){
+    const tagsUsed = new Set(entries.map(e=>e.tag).filter(Boolean)).size;
+    const nightEntry = entries.some(e=>{ const h=new Date(e.ts).getHours(); return h>=23 || h<5; });
+    return {
+      total: entries.length,
+      maxStreak: maxStreakEver(entries),
+      tagsUsed,
+      treeCount: Math.floor(entries.length/30),
+      nightEntry
+    };
+  }
+
+  /* ---------------- Render: Home ---------------- */
+  function renderHome(){
+    document.getElementById('todayLabel').textContent = fmtKoreanDate(todayStr());
+    const streak = calcStreak(entries);
+    const streakBadge = document.getElementById('streakBadge');
+    streakBadge.innerHTML = streak>0
+      ? `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4-2 5-2 8a4 4 0 0 0 8 0c0-1-.3-2-1-3 2 1 3 3 3 5a6 6 0 0 1-12 0c0-4 3-5 4-10Z"/></svg> ${streak}일 연속`
+      : '';
+
+    const treeCount = Math.floor(entries.length/30);
+    const remainder = entries.length % 30;
+    const stage = treeStage(remainder);
+    document.getElementById('treeWrap').innerHTML = svgTree(stage);
+    document.getElementById('treeCaption').innerHTML =
+      entries.length===0
+        ? `아직 심지 않은 <b>씨앗</b>이에요. 첫 감사를 심어보세요.`
+        : `<b>${TREE_LABELS[stage]}</b>(으)로 자랐어요 · 총 ${entries.length}개의 감사`;
+
+    const gardenStrip = document.getElementById('gardenStrip');
+    if(treeCount>0){
+      gardenStrip.innerHTML = Array.from({length:treeCount}).map(()=>
+        `<div class="garden-tree-mini">${svgTree(3)}</div>`
+      ).join('');
+    } else {
+      gardenStrip.innerHTML='';
+    }
+
+    const todayDone = entries.some(e=>e.date===todayStr());
+    const btn = document.getElementById('writeBtn');
+    btn.disabled = todayDone;
+    btn.textContent = todayDone ? '오늘의 감사를 이미 기록했어요' : '오늘의 감사 쓰기';
+
+    // flashback: exactly 100 days ago
+    const fbTarget = new Date();
+    fbTarget.setDate(fbTarget.getDate()-100);
+    const fbEntry = entries.find(e=>e.date===todayStr(fbTarget));
+    const fbCard = document.getElementById('flashbackCard');
+    if(fbEntry){
+      fbCard.style.display='block';
+      fbCard.innerHTML = `<div class="fb-label">100일 전 오늘, 당신의 감사</div>
+        <div class="fb-text">${escapeHtml(firstNonEmpty(fbEntry))}</div>`;
+      fbCard.onclick = ()=> openDetail(fbEntry.id);
+    } else {
+      // occasional random recollection from past entries (not today)
+      const candidates = entries.filter(e=>e.date!==todayStr());
+      const dayHash = hashStr(todayStr());
+      if(candidates.length>=5 && dayHash % 3 === 0){
+        const pick = candidates[dayHash % candidates.length];
+        fbCard.style.display='block';
+        fbCard.innerHTML = `<div class="fb-label">오늘의 회상 · ${fmtKoreanDate(pick.date)}</div>
+          <div class="fb-text">${escapeHtml(firstNonEmpty(pick))}</div>`;
+        fbCard.onclick = ()=> openDetail(pick.id);
+      } else {
+        fbCard.style.display='none';
+      }
+    }
+  }
+
+  function escapeHtml(s){
+    const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML;
+  }
+  function firstNonEmpty(entry){
+    return entry.texts.find(t=>t && t.trim()) || '';
+  }
+
+  /* ---------------- Write flow ---------------- */
+  let selectedTag = null;
+  function renderTagRow(){
+    const row = document.getElementById('tagRow');
+    row.innerHTML='';
+    TAGS.forEach(t=>{
+      const chip = document.createElement('div');
+      chip.className='tag-chip'+(selectedTag===t.id?' selected':'');
+      chip.textContent = t.label;
+      chip.addEventListener('click', ()=>{
+        selectedTag = t.id;
+        renderTagRow();
+        validateWriteForm();
+      });
+      row.appendChild(chip);
+    });
+  }
+  function validateWriteForm(){
+    const v1=document.getElementById('input1').value.trim();
+    const v2=document.getElementById('input2').value.trim();
+    const v3=document.getElementById('input3').value.trim();
+    const ok = !!(v1 || v2 || v3); // at least one line — tough days are okay
+    document.getElementById('submitBtn').disabled = !ok;
+  }
+
+  function renderMoodRow(containerId, value, onPick){
+    const row = document.getElementById(containerId);
+    row.innerHTML='';
+    MOODS.forEach(m=>{
+      const el = document.createElement('div');
+      el.className='mood-face'+(value===m.v?' selected':'');
+      el.textContent = m.e;
+      el.addEventListener('click', ()=> onPick(m.v));
+      row.appendChild(el);
+    });
+  }
+  function refreshMoodRows(){
+    renderMoodRow('moodBeforeRow', selectedMoodBefore, (v)=>{ selectedMoodBefore=v; refreshMoodRows(); });
+    renderMoodRow('moodAfterRow', selectedMoodAfter, (v)=>{ selectedMoodAfter=v; refreshMoodRows(); });
+  }
+
+  function renderExamplesPanel(){
+    const panel = document.getElementById('examplesPanel');
+    panel.innerHTML = `<div class="ex-hint">마음에 드는 문장을 누르면 빈 칸에 넣어드려요.</div>` +
+      EXAMPLES.map(g=>`
+        <div class="ex-group">
+          <div class="ex-cat">${g.cat}</div>
+          ${g.lines.map(line=>`<div class="ex-chip" data-line="${escapeHtml(line)}">${escapeHtml(line)}</div>`).join('')}
+        </div>
+      `).join('');
+    panel.querySelectorAll('.ex-chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        const line = chip.getAttribute('data-line');
+        const targets = ['input1','input2','input3'].map(id=>document.getElementById(id));
+        const empty = targets.find(t=>!t.value.trim());
+        if(empty){ empty.value = line; validateWriteForm(); }
+        else toast('세 칸이 모두 채워져 있어요');
+      });
+    });
+  }
+  document.getElementById('examplesToggle').addEventListener('click', ()=>{
+    const panel = document.getElementById('examplesPanel');
+    panel.classList.toggle('open');
+    if(panel.classList.contains('open') && !panel.innerHTML) renderExamplesPanel();
+  });
+  ['input1','input2','input3'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', validateWriteForm);
+  });
+
+  document.getElementById('writeBtn').addEventListener('click', ()=>{
+    document.getElementById('input1').value='';
+    document.getElementById('input2').value='';
+    document.getElementById('input3').value='';
+    ['input1','input2','input3'].forEach(id=>{
+      document.getElementById(id).style.fontSize = (15*FONT_SCALE).toFixed(1)+'px';
+    });
+    selectedTag=null;
+    selectedMoodBefore=null;
+    selectedMoodAfter=null;
+    document.getElementById('examplesPanel').classList.remove('open');
+    renderTagRow();
+    refreshMoodRows();
+    validateWriteForm();
+    showView('write');
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
+    const texts=[
+      document.getElementById('input1').value.trim(),
+      document.getElementById('input2').value.trim(),
+      document.getElementById('input3').value.trim()
+    ];
+    const entry = {
+      id: 'e_'+Date.now(),
+      date: todayStr(),
+      texts,
+      tag: selectedTag,
+      moodBefore: selectedMoodBefore,
+      moodAfter: selectedMoodAfter,
+      ts: Date.now()
+    };
+    entries.push(entry);
+    entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+    await saveEntries();
+
+    const msg = ENCOURAGE_MSGS[Math.floor(Math.random()*ENCOURAGE_MSGS.length)];
+    document.getElementById('encourageText').textContent = msg;
+    document.getElementById('encourageOverlay').classList.add('active');
+  });
+
+  document.getElementById('encourageClose').addEventListener('click', ()=>{
+    document.getElementById('encourageOverlay').classList.remove('active');
+    renderHome();
+    showView('home');
+
+    const streak = calcStreak(entries);
+    if(streak===7 || streak===30){
+      document.getElementById('streakText').textContent = streak===7 ? '7일 연속 기록 달성!' : '30일 연속 기록 달성!';
+      document.getElementById('streakSub').textContent = streak===7
+        ? '한 주 동안 꾸준히 마음을 살펴보았어요.'
+        : '한 달의 꾸준함, 정말 대단해요.';
+      setTimeout(()=> document.getElementById('streakOverlay').classList.add('active'), 350);
+    }
+  });
+  document.getElementById('streakClose').addEventListener('click', ()=>{
+    document.getElementById('streakOverlay').classList.remove('active');
+  });
+
+  /* ---------------- History ---------------- */
+  document.getElementById('navHistory').addEventListener('click', ()=>{
+    historyFilterTag=null; historySearchTerm='';
+    document.getElementById('searchBox').value='';
+    renderFilterRow();
+    renderHistory();
+    showView('history');
+  });
+
+  function renderFilterRow(){
+    const row = document.getElementById('filterRow');
+    row.innerHTML='';
+    const allChip = document.createElement('div');
+    allChip.className='filter-chip'+(historyFilterTag===null?' selected':'');
+    allChip.textContent='전체';
+    allChip.addEventListener('click', ()=>{ historyFilterTag=null; renderFilterRow(); renderHistory(); });
+    row.appendChild(allChip);
+    TAGS.forEach(t=>{
+      const chip = document.createElement('div');
+      chip.className='filter-chip'+(historyFilterTag===t.id?' selected':'');
+      chip.textContent=t.label;
+      chip.addEventListener('click', ()=>{ historyFilterTag=t.id; renderFilterRow(); renderHistory(); });
+      row.appendChild(chip);
+    });
+  }
+  document.getElementById('searchBox').addEventListener('input', (e)=>{
+    historySearchTerm = e.target.value.trim().toLowerCase();
+    renderHistory();
+  });
+
+  function renderHistory(){
+    const list = document.getElementById('historyList');
+    let filtered = entries;
+    if(historyFilterTag) filtered = filtered.filter(e=>e.tag===historyFilterTag);
+    if(historySearchTerm) filtered = filtered.filter(e=> e.texts.some(t=>t && t.toLowerCase().includes(historySearchTerm)));
+
+    if(entries.length===0){
+      list.innerHTML = `<div class="empty-state">아직 기록이 없어요.<br>첫 감사를 남겨보면 이곳에 쌓여요.</div>`;
+      return;
+    }
+    if(filtered.length===0){
+      list.innerHTML = `<div class="empty-state">조건에 맞는 기록이 없어요.</div>`;
+      return;
+    }
+    list.innerHTML='';
+    filtered.forEach(e=>{
+      const tag = TAGS.find(t=>t.id===e.tag);
+      const card = document.createElement('div');
+      card.className='entry-card';
+      card.innerHTML = `
+        <div class="ec-top">
+          <span class="ec-date">${fmtKoreanDate(e.date)}</span>
+          ${tag?`<span class="ec-tag" style="color:${tag.color}">${tag.label}</span>`:''}
+        </div>
+        <div class="ec-line" style="font-size:${(14*FONT_SCALE).toFixed(1)}px;">${escapeHtml(firstNonEmpty(e))}</div>`;
+      card.addEventListener('click', ()=> openDetail(e.id));
+      list.appendChild(card);
+    });
+  }
+
+  function openDetail(id){
+    currentDetailEntry = entries.find(e=>e.id===id);
+    if(!currentDetailEntry) return;
+    const tag = TAGS.find(t=>t.id===currentDetailEntry.tag);
+    document.getElementById('cardDetail').innerHTML = `
+      <div class="cd-date serif">${fmtKoreanDate(currentDetailEntry.date)}</div>
+      ${tag?`<div class="cd-tag">오늘의 감정 · ${tag.label}</div>`:''}
+      <ul>
+        ${currentDetailEntry.texts.filter(t=>t && t.trim()).map(t=>`<li style="font-size:${(15.5*FONT_SCALE).toFixed(1)}px;">${escapeHtml(t)}</li>`).join('')}
+      </ul>
+      <div class="cd-brand">하루3감사</div>
+    `;
+    showView('detail');
+  }
+
+  document.getElementById('saveImgBtn').addEventListener('click', ()=>{
+    const node = document.getElementById('cardDetail');
+    html2canvas(node, {backgroundColor:null, scale:2}).then(canvas=>{
+      const link = document.createElement('a');
+      link.download = `하루3감사_${currentDetailEntry.date}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast('이미지로 저장했어요');
+    }).catch(()=> toast('저장에 실패했어요'));
+  });
+
+  document.getElementById('shareBtn').addEventListener('click', async ()=>{
+    const node = document.getElementById('cardDetail');
+    if(!navigator.share){
+      toast('이 브라우저에서는 공유하기를 지원하지 않아요');
+      return;
+    }
+    try{
+      const canvas = await html2canvas(node, {backgroundColor:null, scale:2});
+      const blob = await new Promise(res=>canvas.toBlob(res,'image/png'));
+      const file = new File([blob], `하루3감사_${currentDetailEntry.date}.png`, {type:'image/png'});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:'하루3감사', text:'오늘의 감사를 나눠요'});
+      } else {
+        await navigator.share({title:'하루3감사', text: firstNonEmpty(currentDetailEntry)});
+      }
+    }catch(e){
+      if(e.name!=='AbortError') toast('공유하지 못했어요');
+    }
+  });
+
+  /* ---------------- Report ---------------- */
+  document.getElementById('navReport').addEventListener('click', ()=>{ reportMonthOffset=0; renderReport(); showView('report'); });
+  document.getElementById('prevMonth').addEventListener('click', ()=>{ reportMonthOffset--; renderReport(); });
+  document.getElementById('nextMonth').addEventListener('click', ()=>{ if(reportMonthOffset<0){ reportMonthOffset++; renderReport(); } });
+
+  let chartInstance = null;
+  function renderReport(){
+    const base = new Date();
+    base.setDate(1);
+    base.setMonth(base.getMonth()+reportMonthOffset);
+    const y = base.getFullYear(), m = base.getMonth();
+    document.getElementById('monthLabel').textContent = `${y}년 ${m+1}월`;
+    document.getElementById('nextMonth').style.opacity = reportMonthOffset<0 ? '1' : '0.3';
+    document.getElementById('nextMonth').style.pointerEvents = reportMonthOffset<0 ? 'auto':'none';
+
+    const monthEntries = entries.filter(e=>{
+      const d = dateFromStr(e.date);
+      return d.getFullYear()===y && d.getMonth()===m;
+    });
+
+    const body = document.getElementById('reportBody');
+    if(monthEntries.length===0){
+      body.innerHTML = `<div class="report-empty">이 달에는 기록된 감사가 없어요.</div>`;
+      if(chartInstance){ chartInstance.destroy(); chartInstance=null; }
+      return;
+    }
+
+    const counts = TAGS.map(t=> monthEntries.filter(e=>e.tag===t.id).length);
+
+    body.innerHTML = `
+      <div class="chart-wrap">
+        <div class="chart-canvas-box">
+          <canvas id="reportCanvas"></canvas>
+          <div class="chart-center-label">
+            <div class="num">${monthEntries.length}</div>
+            <div class="lbl">개의 감사</div>
+          </div>
+        </div>
+        <div class="legend" id="legendBox"></div>
+        <div class="section-sub" id="wordcloudLabel" style="display:none;">이 달에 자주 떠올린 단어</div>
+        <div class="wordcloud" id="wordcloudBox"></div>
+      </div>
+    `;
+    const legend = document.getElementById('legendBox');
+    legend.innerHTML = TAGS.map((t,i)=>`
+      <div class="legend-item">
+        <span class="legend-dot" style="background:${t.color}"></span>
+        <span>${t.label}</span>
+        <span class="cnt">${counts[i]}회</span>
+      </div>`).join('');
+
+    renderWordCloud(monthEntries);
+
+    const ctx = document.getElementById('reportCanvas').getContext('2d');
+    if(chartInstance) chartInstance.destroy();
+    chartInstance = new Chart(ctx, {
+      type:'doughnut',
+      data:{
+        labels: TAGS.map(t=>t.label),
+        datasets:[{ data: counts, backgroundColor: TAGS.map(t=>t.color), borderWidth:0 }]
+      },
+      options:{
+        cutout:'70%',
+        plugins:{ legend:{display:false}, tooltip:{enabled:true} },
+        animation:{ duration:500 }
+      }
+    });
+  }
+
+  const STOPWORDS = new Set(['오늘','정말','너무','그리고','그래서','하지만','그냥','오늘도','있어','없어','했다','한다','같아요','같다','였다','해서','해요','때문에','그런데','조금','그게','이제','이렇게','저는','나는']);
+  function renderWordCloud(list){
+    const box = document.getElementById('wordcloudBox');
+    const label = document.getElementById('wordcloudLabel');
+    if(!box) return;
+    const freq = {};
+    list.forEach(e=>{
+      e.texts.forEach(t=>{
+        if(!t) return;
+        t.split(/[\s,.!?~^;:"'()\[\]{}·\-]+/).forEach(w=>{
+          w = w.trim();
+          if(w.length<2 || STOPWORDS.has(w)) return;
+          freq[w] = (freq[w]||0)+1;
+        });
+      });
+    });
+    const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    if(top.length===0){ box.innerHTML=''; label.style.display='none'; return; }
+    label.style.display='block';
+    const max = top[0][1];
+    box.innerHTML = top.map(([w,c])=>{
+      const scale = 0.85 + (c/max)*0.5;
+      return `<span class="word-pill" style="font-size:${(13*scale).toFixed(1)}px;">${escapeHtml(w)}</span>`;
+    }).join('');
+  }
+
+  /* ---------------- Calendar ---------------- */
+  document.getElementById('navCalendar').addEventListener('click', ()=>{ calMonthOffset=0; renderCalendar(); showView('calendar'); });
+  document.getElementById('calPrevMonth').addEventListener('click', ()=>{ calMonthOffset--; renderCalendar(); });
+  document.getElementById('calNextMonth').addEventListener('click', ()=>{ if(calMonthOffset<0){ calMonthOffset++; renderCalendar(); } });
+
+  function renderCalendar(){
+    const base = new Date();
+    base.setDate(1);
+    base.setMonth(base.getMonth()+calMonthOffset);
+    const y = base.getFullYear(), m = base.getMonth();
+    document.getElementById('calMonthLabel').textContent = `${y}년 ${m+1}월`;
+    document.getElementById('calNextMonth').style.opacity = calMonthOffset<0 ? '1' : '0.3';
+    document.getElementById('calNextMonth').style.pointerEvents = calMonthOffset<0 ? 'auto':'none';
+
+    const entryByDate = {};
+    entries.forEach(e=>{ entryByDate[e.date] = e; });
+
+    const firstDow = new Date(y,m,1).getDay();
+    const daysInMonth = new Date(y,m+1,0).getDate();
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = ['일','월','화','수','목','금','토'].map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+    for(let i=0;i<firstDow;i++){ grid.innerHTML += `<div class="cal-cell empty"></div>`; }
+    for(let day=1; day<=daysInMonth; day++){
+      const dStr = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const entry = entryByDate[dStr];
+      const tag = entry ? TAGS.find(t=>t.id===entry.tag) : null;
+      const isToday = dStr===todayStr();
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell'+(entry?' has-entry':'')+(isToday?' today-cell':'');
+      if(entry){ cell.style.background = tag ? tag.color : 'var(--gold)'; }
+      cell.textContent = day;
+      if(entry){ cell.addEventListener('click', ()=> openDetail(entry.id)); }
+      grid.appendChild(cell);
+    }
+  }
+
+  /* ---------------- Badges ---------------- */
+  document.getElementById('openBadges').addEventListener('click', ()=>{ renderBadges(); showView('badges'); });
+  function renderBadges(){
+    const stats = computeStats();
+    const grid = document.getElementById('badgeGrid');
+    grid.innerHTML = BADGES.map(b=>{
+      const earned = b.test(stats);
+      return `<div class="badge-card${earned?' earned':''}">
+        <div class="b-icon">${b.icon}</div>
+        <div class="b-title">${b.title}</div>
+        <div class="b-desc">${b.desc}</div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ---------------- Settings ---------------- */
+  document.getElementById('navSettings').addEventListener('click', ()=>{ renderSettings(); showView('settings'); });
+  function renderSettings(){
+    document.getElementById('pinSwitch').classList.toggle('on', settings.pinEnabled);
+    const fs = settings.fontSize || 'md';
+    document.querySelectorAll('#fontsizeRow .fs-btn').forEach(btn=>{
+      btn.classList.toggle('active', btn.getAttribute('data-fs')===fs);
+    });
+  }
+  document.querySelectorAll('#fontsizeRow .fs-btn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const fs = btn.getAttribute('data-fs');
+      settings.fontSize = fs;
+      applyFontSize(fs);
+      await storageSet('settings', settings);
+      renderSettings();
+    });
+  });
+  function applyFontSize(fs){
+    const scale = fs==='sm' ? 0.9 : fs==='lg' ? 1.18 : 1;
+    FONT_SCALE = scale;
+    document.body.classList.remove('fs-sm','fs-md','fs-lg');
+    document.body.classList.add('fs-'+(fs||'md'));
+    document.documentElement.style.setProperty('--content-scale', scale);
+
+    // Direct inline overrides — doesn't depend on CSS cascade at all.
+    ['input1','input2','input3'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.fontSize = (15*scale).toFixed(1)+'px';
+    });
+    document.querySelectorAll('.entry-card .ec-line').forEach(el=>{
+      el.style.fontSize = (14*scale).toFixed(1)+'px';
+    });
+    document.querySelectorAll('.card-detail li').forEach(el=>{
+      el.style.fontSize = (15.5*scale).toFixed(1)+'px';
+    });
+    const tc = document.getElementById('treeCaption');
+    if(tc) tc.style.fontSize = (14.5*scale).toFixed(1)+'px';
+    const preview = document.getElementById('fsPreview');
+    if(preview) preview.style.fontSize = (14*scale).toFixed(1)+'px';
+  }
+  document.getElementById('pinSwitch').addEventListener('click', async ()=>{
+    if(settings.pinEnabled){
+      settings.pinEnabled=false;
+      settings.salt=null;
+      cryptoKey=null;
+      await storageSet('settings', settings);
+      await storageSet('entries', entries); // 암호화 해제 -> 평문으로 재저장
+      renderSettings();
+      toast('PIN 잠금과 암호화를 해제했어요');
+    } else {
+      pinSetupStage='create'; pinSetupFirst=''; pendingPinBuffer='';
+      document.getElementById('pinsetTitle').textContent='새 PIN을 입력하세요';
+      document.getElementById('pinsetSub').textContent='일기를 보호할 4자리 숫자를 정해주세요';
+      renderPinDots('setDots',0,false);
+      showView('pinset');
+    }
+  });
+  document.getElementById('clearDataBtn').addEventListener('click', async ()=>{
+    if(confirm('정말 모든 감사 기록을 삭제할까요? 이 작업은 되돌릴 수 없어요.')){
+      entries=[];
+      await saveEntries();
+      renderHome();
+      toast('모든 기록을 삭제했어요');
+      showView('home');
+    }
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', ()=>{
+    const payload = { exportedAt: new Date().toISOString(), entries };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `하루3감사_백업_${todayStr()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('기록을 내보냈어요');
+  });
+
+  document.getElementById('importBtn').addEventListener('click', ()=>{
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const incoming = Array.isArray(data) ? data : data.entries;
+        if(!Array.isArray(incoming)) throw new Error('invalid');
+        const existingIds = new Set(entries.map(e=>e.id));
+        let added = 0;
+        incoming.forEach(item=>{
+          if(item && item.id && item.date && Array.isArray(item.texts) && !existingIds.has(item.id)){
+            entries.push(item);
+            existingIds.add(item.id);
+            added++;
+          }
+        });
+        entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+        await saveEntries();
+        toast(`${added}개의 기록을 불러왔어요`);
+        renderHome();
+      }catch(err){
+        toast('올바른 백업 파일이 아니에요');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  /* ---------------- Forgot PIN ---------------- */
+  document.getElementById('forgotPinLink').addEventListener('click', ()=>{
+    document.getElementById('forgotPinOverlay').classList.add('active');
+  });
+  document.getElementById('forgotPinCancel').addEventListener('click', ()=>{
+    document.getElementById('forgotPinOverlay').classList.remove('active');
+  });
+  document.getElementById('forgotPinConfirm').addEventListener('click', async ()=>{
+    // PIN으로 암호화된 기록은 PIN 없이 복호화할 방법이 없다 — 초기화는 곧 기존 기록 삭제를 뜻한다.
+    entries = [];
+    cryptoKey = null;
+    settings.pinEnabled = false;
+    settings.salt = null;
+    await storageSet('settings', settings);
+    await storageSet('entries', entries);
+    document.getElementById('forgotPinOverlay').classList.remove('active');
+    unlocked=true;
+    pendingPinBuffer='';
+    renderHome();
+    showView('home');
+    toast('초기화했어요. 암호화됐던 이전 기록은 복구할 수 없어요.');
+  });
+
+  /* ---------------- PIN pads ---------------- */
+  function buildPad(containerId, onKey){
+    const pad = document.getElementById(containerId);
+    pad.innerHTML='';
+    const keys=['1','2','3','4','5','6','7','8','9','','0','⌫'];
+    keys.forEach(k=>{
+      const el = document.createElement('div');
+      if(k===''){ el.className='pin-key ghost'; }
+      else{
+        el.className='pin-key';
+        el.textContent = k;
+        el.addEventListener('click', ()=> onKey(k));
+      }
+      pad.appendChild(el);
+    });
+  }
+  function renderPinDots(containerId, len, error){
+    const box = document.getElementById(containerId);
+    box.innerHTML='';
+    for(let i=0;i<4;i++){
+      const d=document.createElement('div');
+      d.className='pin-dot'+(i<len?(error?' error':' filled'):'');
+      box.appendChild(d);
+    }
+  }
+
+  // Lock pad
+  buildPad('lockPad', async (k)=>{
+    if(k==='⌫'){ pendingPinBuffer = pendingPinBuffer.slice(0,-1); renderPinDots('lockDots', pendingPinBuffer.length,false); return; }
+    if(pendingPinBuffer.length>=4) return;
+    pendingPinBuffer += k;
+    renderPinDots('lockDots', pendingPinBuffer.length,false);
+    if(pendingPinBuffer.length===4){
+      const pin = pendingPinBuffer;
+      pendingPinBuffer='';
+      try{
+        const key = await deriveKey(pin, settings.salt);
+        const stored = await storageGet('entries', {enc:true, iv:null, data:null});
+        const decrypted = await decryptJSON(key, stored); // PIN이 틀리면 여기서 예외 발생 (인증 실패)
+        cryptoKey = key;
+        entries = Array.isArray(decrypted) ? decrypted : [];
+        entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+        unlocked=true;
+        renderHome();
+        showView('home');
+      }catch(e){
+        renderPinDots('lockDots',4,true);
+        setTimeout(()=>{ renderPinDots('lockDots',0,false); },500);
+        toast('PIN이 일치하지 않아요');
+      }
+    }
+  });
+
+  // Set pad
+  buildPad('setPad', async (k)=>{
+    if(k==='⌫'){ pendingPinBuffer = pendingPinBuffer.slice(0,-1); renderPinDots('setDots', pendingPinBuffer.length,false); return; }
+    if(pendingPinBuffer.length>=4) return;
+    pendingPinBuffer += k;
+    renderPinDots('setDots', pendingPinBuffer.length,false);
+    if(pendingPinBuffer.length===4){
+      if(pinSetupStage==='create'){
+        pinSetupFirst = pendingPinBuffer;
+        pendingPinBuffer='';
+        pinSetupStage='confirm';
+        document.getElementById('pinsetTitle').textContent='한 번 더 입력해주세요';
+        document.getElementById('pinsetSub').textContent='같은 번호를 다시 입력해 확인해요';
+        setTimeout(()=>renderPinDots('setDots',0,false), 200);
+      } else {
+        if(pendingPinBuffer===pinSetupFirst){
+          const salt = randomSaltB64();
+          cryptoKey = await deriveKey(pinSetupFirst, salt);
+          settings.pinEnabled=true;
+          settings.salt=salt;
+          await storageSet('settings', settings);
+          await saveEntries(); // 지금까지의 기록을 암호화해서 저장
+          pendingPinBuffer='';
+          toast('PIN 잠금과 암호화를 설정했어요');
+          renderSettings();
+          showView('settings');
+        } else {
+          renderPinDots('setDots',4,true);
+          toast('입력한 PIN이 서로 달라요, 다시 시도해주세요');
+          setTimeout(()=>{
+            pendingPinBuffer=''; pinSetupStage='create'; pinSetupFirst='';
+            document.getElementById('pinsetTitle').textContent='새 PIN을 입력하세요';
+            document.getElementById('pinsetSub').textContent='일기를 보호할 4자리 숫자를 정해주세요';
+            renderPinDots('setDots',0,false);
+          },600);
+        }
+      }
+    }
+  });
+
+  /* ---------------- Service Worker ---------------- */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    });
+  }
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    settings = await storageGet('settings', {pinEnabled:false, salt:null, fontSize:'md'});
+    applyFontSize(settings.fontSize || 'md');
+
+    renderTagRow();
+    refreshMoodRows();
+    if(settings.pinEnabled && settings.salt){
+      // PIN 확인 전에는 암호화된 데이터를 복호화하지 않는다 — entries는 빈 상태로 유지.
+      entries = [];
+      renderPinDots('lockDots',0,false);
+      showView('pinlock');
+    } else {
+      entries = await storageGet('entries', []);
+      if(!Array.isArray(entries)) entries = [];
+      entries.sort((a,b)=> a.date < b.date ? 1 : -1);
+      renderHome();
+      showView('home');
+    }
+  }
+  init();
+
+})();
+</script>
+</body>
+</html>
