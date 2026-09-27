@@ -313,6 +313,14 @@
   }
   .pin-key:active{background:var(--bg-card);}
   .pin-key.ghost{background:transparent; border:none; cursor:default;}
+  .pin-pad.locked{opacity:0.35; pointer-events:none;}
+  .lockout-box{
+    margin-top:22px; padding:14px 18px; border-radius:16px;
+    background:rgba(206,142,146,0.12); border:1px solid rgba(206,142,146,0.35);
+    color:var(--rose); font-size:14px; line-height:1.6; display:none;
+  }
+  .lockout-box.show{display:block;}
+  .lockout-box .lo-time{font-family:'Noto Serif KR',serif; font-size:20px; margin-top:4px; display:block;}
 
   /* ---------- Popups ---------- */
   .overlay{
@@ -433,23 +441,92 @@
   .garden-theme-current{
     background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-lg);
     padding:24px 20px; text-align:center; margin-top:4px;
+    position:relative; overflow:hidden;
   }
-  .garden-theme-current .gtc-icon{font-size:38px;}
-  .garden-theme-current .gtc-label{margin-top:8px; font-size:18px;}
-  .garden-theme-current .gtc-progress{margin-top:6px; font-size:13px; color:var(--text-muted); line-height:1.6;}
-  .garden-theme-current .gtc-bar{margin-top:14px; height:8px; border-radius:100px; background:var(--bg-card-2); overflow:hidden;}
+  .garden-theme-current[data-theme="mountain"]{
+    background:linear-gradient(180deg, #6FC1E8 0%, #9AD6EC 44%, #7EC062 44%, #4F8F42 100%);
+  }
+  .garden-theme-current[data-theme="snow"]{
+    background:linear-gradient(180deg, #A9D9E6 0%, #CBEAF1 44%, #F6F9FB 44%, #E2EBEF 100%);
+  }
+  .garden-theme-current[data-theme="jungle"]{
+    background:linear-gradient(180deg, #16321F 0%, #1E4A2B 78%, #3E4A26 78%, #2A3620 100%);
+  }
+  .garden-theme-current[data-theme="desert"]{
+    background:linear-gradient(180deg, #8FD3EE 0%, #BFE7F4 56%, #E8CE8E 56%, #D8B569 100%);
+  }
+  .garden-scene{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+  .garden-scene .sun{
+    position:absolute; top:14px; right:20px; width:34px; height:34px; border-radius:50%;
+    background:radial-gradient(circle, #FFE49A, #F0C664 70%); box-shadow:0 0 22px rgba(240,198,100,0.55);
+  }
+  .garden-scene .oasis{
+    position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+    width:74px; height:24px; border-radius:50%;
+    background:radial-gradient(ellipse, #4FA9C9, #2E82A3 80%);
+  }
+  .garden-scene .oasis::before, .garden-scene .oasis::after{
+    content:''; position:absolute; bottom:10px; width:7px; height:22px; border-radius:0 60% 0 60%;
+    background:#3C8A4A;
+  }
+  .garden-scene .oasis::before{left:8px; transform:rotate(-18deg);}
+  .garden-scene .oasis::after{right:8px; transform:rotate(18deg) scaleX(-1);}
+  .garden-scene .snowflake{
+    position:absolute; top:-6px; width:6px; height:6px; border-radius:50%; background:#fff; opacity:0.9;
+    animation:snowfall linear infinite;
+  }
+  @keyframes riverFlow{
+    from{ stroke-dashoffset:0; }
+    to{ stroke-dashoffset:-24; }
+  }
+  @keyframes snowfall{
+    from{ transform:translateY(-10px); }
+    to{ transform:translateY(130px); }
+  }
+  .garden-scene .jungle-river{
+    position:absolute; left:0; right:0; bottom:0; height:22%; width:100%;
+    display:block;
+  }
+  .garden-scene .jungle-trunk{
+    position:absolute; bottom:20%; width:9px; border-radius:3px;
+    background:linear-gradient(180deg, #6B4A2E, #4A3220);
+  }
+  .garden-scene .jungle-branch{
+    position:absolute; height:5px; border-radius:3px;
+    background:linear-gradient(90deg, #6B4A2E, #4A3220);
+    transform-origin:left center;
+  }
+  .garden-scene .jungle-snake{position:absolute;}
+  .garden-scene .canopy.bg{opacity:0.55; filter:saturate(0.8);}
+  .garden-scene .canopy{
+    position:absolute; top:-18px; border-radius:50%; background:#143A20; opacity:0.92;
+  }
+  .garden-scene .snake{position:absolute; top:34px; right:24px; width:44px; height:68px;}
+  .garden-theme-current .gtc-icon{font-size:38px; position:relative; z-index:1;}
+  .garden-theme-current .gtc-label{margin-top:8px; font-size:18px; position:relative; z-index:1;}
+  .garden-theme-current .gtc-progress{margin-top:6px; font-size:13px; color:var(--text-muted); line-height:1.6; position:relative; z-index:1;}
+  .garden-theme-current[data-theme] .gtc-progress{color:rgba(20,20,20,0.72);}
+  .garden-theme-current[data-theme] .gtc-label{color:#1E2A1E; text-shadow:0 1px 2px rgba(255,255,255,0.25);}
+  .garden-theme-current[data-theme="jungle"] .gtc-label,
+  .garden-theme-current[data-theme="jungle"] .gtc-progress{color:#EAF3E9; text-shadow:0 1px 3px rgba(0,0,0,0.5);}
+  .garden-theme-current .gtc-bar{margin-top:14px; height:8px; border-radius:100px; background:var(--bg-card-2); overflow:hidden; position:relative; z-index:1;}
+  .garden-theme-current[data-theme] .gtc-bar{background:rgba(20,20,20,0.18);}
   .garden-theme-current .gtc-bar-fill{height:100%; background:linear-gradient(90deg,#F0C664,var(--gold-dim)); border-radius:100px; transition:width .3s ease;}
-  .garden-theme-current .gtc-strip{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:16px;}
+  .garden-theme-current .gtc-strip{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:16px; position:relative; z-index:1;}
   .garden-theme-current .gtc-strip .garden-tree-mini{width:26px; height:26px;}
   .garden-theme-current .gtc-empty{color:var(--text-dim); font-size:12.5px;}
+  .garden-theme-current[data-theme] .gtc-empty{color:rgba(20,20,20,0.55);}
+  .garden-theme-current[data-theme="jungle"] .gtc-empty{color:rgba(234,243,233,0.7);}
 
   .garden-theme-list{margin-top:18px; display:flex; flex-direction:column; gap:10px;}
   .theme-row{
     display:flex; align-items:center; gap:12px;
     background:var(--bg-panel); border:1px solid var(--border); border-radius:var(--radius-md);
-    padding:14px 16px; transition:opacity .15s ease;
+    padding:14px 16px; transition:opacity .15s ease, border-color .15s ease;
+    cursor:pointer;
   }
-  .theme-row.locked{opacity:0.45;}
+  .theme-row.locked{opacity:0.45; cursor:default;}
+  .theme-row.selected-row{border-color:rgba(231,184,78,0.5);}
   .theme-row .tr-icon{font-size:22px; flex-shrink:0;}
   .theme-row .tr-info{flex:1; min-width:0;}
   .theme-row .tr-name{font-size:14px; font-weight:600; color:var(--text);}
@@ -543,6 +620,10 @@
     <p class="pin-sub">4자리 PIN을 입력하세요</p>
     <div class="pin-dots" id="lockDots"></div>
     <div class="pin-pad" id="lockPad"></div>
+    <div class="lockout-box" id="lockoutBox">
+      <span>PIN을 여러 번 틀려서 잠시 잠겼어요</span>
+      <span class="lo-time" id="lockoutTime"></span>
+    </div>
     <div class="forgot-link" id="forgotPinLink">PIN을 잊으셨나요?</div>
   </div>
 
@@ -870,16 +951,23 @@
   let garden = { freezeTokens:0, lastFreezeGrantMonth:null, freezeUsedDates:[] };
 
   /* ---------------- Garden themes & growth ---------------- */
-  const GROWTH_CYCLE = 7;   // entries needed to fully grow one tree/cactus (was 30)
+  const GROWTH_CYCLE = 6;   // entries needed to fully grow one tree/cactus
   const THEME_TARGET = 7;   // full-grown plants needed per theme before the next theme unlocks
   const FRUIT_REQUIREMENT = 7; // total full-grown plants owned before monthly "fruit" (freeze) starts
   const THEMES = [
     {id:'mountain', label:'산',   icon:'⛰️', plant:'tree',   palette:{sage:'#8AB374', sageDeep:'#4F7A44'}},
-    {id:'snow',     label:'설원', icon:'❄️', plant:'tree',   palette:{sage:'#BFE7EC', sageDeep:'#6FA9B8'}},
+    {id:'snow',     label:'설원', icon:'❄️', plant:'spruce', palette:{sage:'#3E6E5B', sageDeep:'#274A3D'}},
     {id:'jungle',   label:'정글', icon:'🌴', plant:'tree',   palette:{sage:'#4F9D5B', sageDeep:'#2C6B39'}},
     {id:'desert',   label:'사막', icon:'🏜️', plant:'cactus', palette:{sage:'#7FAE6B', sageDeep:'#587F49', sand:'#E3C27C'}}
   ];
   function totalFullGrown(){ return Math.floor(entries.length/GROWTH_CYCLE); }
+  // how many entries into the *current, still-growing* tree (1..GROWTH_CYCLE, never 0
+  // for a non-empty diary) — day 6 stays a full-grown tree instead of resetting to a seed
+  function currentCycleCount(){
+    if(entries.length<=0) return 0;
+    const r = entries.length % GROWTH_CYCLE;
+    return r===0 ? GROWTH_CYCLE : r;
+  }
   function currentThemeIndex(){ return Math.min(Math.floor(totalFullGrown()/THEME_TARGET), THEMES.length-1); }
   function itemsInCurrentTheme(){
     const idx = currentThemeIndex();
@@ -893,6 +981,7 @@
   let pinSetupFirst = '';
   let pinSetupReturnView = 'settings'; // 'settings' or 'home' (after recovery)
   let selectedSecurityQuestion = null;
+  let lockoutTimer = null;
 
   const SECURITY_QUESTIONS = [
     '가장 좋아하는 음식은?',
@@ -983,8 +1072,8 @@
   function treeStage(count){
     if(count<=0) return 0; // seed
     if(count<3) return 1;  // sprout (day 1-2)
-    if(count<GROWTH_CYCLE) return 2; // small plant (day 3-6)
-    return 3;              // full-grown (shown for completed garden items)
+    if(count<GROWTH_CYCLE) return 2; // small plant (day 3-5)
+    return 3;              // full-grown (day 6, shown until the next entry starts a new tree)
   }
   const TREE_LABELS = ['씨앗','새싹','작은 나무','풍성한 나무'];
   const CACTUS_LABELS = ['씨앗','새싹','작은 선인장','풍성한 선인장'];
@@ -1071,9 +1160,53 @@
     </svg>`;
   }
 
+  // 가문비나무 (Norway spruce) — a tall, tiered conifer for the snow theme
+  function svgSpruce(stage, palette){
+    const gold='#E7B84E', sage=(palette&&palette.sage)||'#3E6E5B', sageDeep=(palette&&palette.sageDeep)||'#274A3D', pot='#3B4560';
+    if(stage===0){
+      return `<svg width="140" height="140" viewBox="0 0 140 140">
+        <ellipse cx="70" cy="118" rx="34" ry="8" fill="${pot}" opacity="0.5"/>
+        <circle cx="70" cy="104" r="10" fill="#7A5C3E"/>
+        <path d="M70 106 L70 96" stroke="${sageDeep}" stroke-width="3" stroke-linecap="round"/>
+        <path d="M70 100 L64 104 M70 100 L76 104" stroke="${sage}" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>`;
+    }
+    if(stage===1){
+      return `<svg width="150" height="150" viewBox="0 0 150 150">
+        <ellipse cx="75" cy="126" rx="38" ry="8" fill="${pot}" opacity="0.5"/>
+        <path d="M75 126 L75 108" stroke="${sageDeep}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M75 88 L58 112 L92 112 Z" fill="${sage}"/>
+        <path d="M75 98 L63 118 L87 118 Z" fill="${sageDeep}" opacity="0.9"/>
+      </svg>`;
+    }
+    if(stage===2){
+      return `<svg width="170" height="170" viewBox="0 0 170 170">
+        <ellipse cx="85" cy="146" rx="46" ry="9" fill="${pot}" opacity="0.5"/>
+        <path d="M85 146 L85 128" stroke="${sageDeep}" stroke-width="6" stroke-linecap="round"/>
+        <path d="M85 66 L64 100 L106 100 Z" fill="${sage}"/>
+        <path d="M85 84 L60 120 L110 120 Z" fill="${sage}"/>
+        <path d="M85 102 L56 138 L114 138 Z" fill="${sageDeep}" opacity="0.92"/>
+      </svg>`;
+    }
+    return `<svg width="200" height="200" viewBox="0 0 200 200">
+      <ellipse cx="100" cy="176" rx="58" ry="10" fill="${pot}" opacity="0.5"/>
+      <path d="M100 176 L100 156" stroke="${sageDeep}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M100 48 L74 88 L126 88 Z" fill="${sage}"/>
+      <path d="M100 70 L68 112 L132 112 Z" fill="${sage}"/>
+      <path d="M100 96 L60 140 L140 140 Z" fill="${sageDeep}" opacity="0.94"/>
+      <path d="M100 124 L52 168 L148 168 Z" fill="${sageDeep}" opacity="0.88"/>
+      <circle cx="86" cy="82" r="4.5" fill="${gold}"/>
+      <circle cx="118" cy="106" r="4.5" fill="${gold}"/>
+      <circle cx="76" cy="134" r="4.5" fill="${gold}"/>
+      <circle cx="128" cy="150" r="4.5" fill="${gold}"/>
+    </svg>`;
+  }
+
   function svgPlant(stage, theme){
     theme = theme || THEMES[0];
-    return theme.plant==='cactus' ? svgCactus(stage, theme.palette) : svgTree(stage, theme.palette);
+    if(theme.plant==='cactus') return svgCactus(stage, theme.palette);
+    if(theme.plant==='spruce') return svgSpruce(stage, theme.palette);
+    return svgTree(stage, theme.palette);
   }
   function plantLabels(theme){
     return (theme && theme.plant==='cactus') ? CACTUS_LABELS : TREE_LABELS;
@@ -1194,7 +1327,7 @@
     const themeIdx = currentThemeIndex();
     const theme = THEMES[themeIdx];
     const itemsHere = itemsInCurrentTheme();
-    const remainder = entries.length % GROWTH_CYCLE;
+    const remainder = currentCycleCount();
     const stage = treeStage(remainder);
     const labels = plantLabels(theme);
     document.getElementById('treeWrap').innerHTML = svgPlant(stage, theme);
@@ -1634,24 +1767,92 @@
   }
 
   /* ---------------- My Garden ---------------- */
-  document.getElementById('navGarden').addEventListener('click', ()=>{ renderGarden(); showView('garden'); });
+  let selectedGardenTheme = null;
+  document.getElementById('navGarden').addEventListener('click', ()=>{ selectedGardenTheme=null; renderGarden(); showView('garden'); });
+
+  // Decorative background scene for the "current theme" card: ground + sky + weather per theme.
+  function sceneOverlay(themeId){
+    if(themeId==='desert'){
+      // sand ground, one oasis, clear sky with the sun — no clouds
+      return `<div class="garden-scene">
+        <div class="sun"></div>
+        <div class="oasis"></div>
+      </div>`;
+    }
+    if(themeId==='snow'){
+      // white ground, sky-blue sky, falling snow
+      const flakes = Array.from({length:14}).map((_,i)=>{
+        const left = (i*7 + (i%3)*5) % 100;
+        const delay = (i%7)*0.6;
+        const dur = 4 + (i%4);
+        return `<div class="snowflake" style="left:${left}%; animation-duration:${dur}s; animation-delay:${delay}s;"></div>`;
+      }).join('');
+      return `<div class="garden-scene">${flakes}</div>`;
+    }
+    if(themeId==='jungle'){
+      // dense background trees (trunks + canopy), a snake dangling from one branch,
+      // and a winding S-shaped river cut into the swamp-colored ground
+      const trunks = [
+        {left:8,  h:40, top:8},
+        {left:24, h:52, top:-4},
+        {left:46, h:36, top:14},
+        {left:66, h:56, top:-8},
+        {left:84, h:42, top:6}
+      ].map(t=>`<div class="jungle-trunk" style="left:${t.left}%; top:${t.top}px; height:${t.h}px;"></div>`).join('');
+      const canopies = [
+        [-6,10,60,false],[26,-10,70,false],[60,4,64,false],[94,-8,66,false],
+        [16,26,44,true],[70,24,46,true],[42,20,40,true]
+      ].map(([left,top,size,bg])=>`<div class="canopy${bg?' bg':''}" style="left:${left}%; top:${top}px; width:${size}px; height:${size}px;"></div>`).join('');
+      // branch juts out from the trunk at left:24% — snake coils down from its tip
+      const branch = `<div class="jungle-branch" style="left:24%; top:30px; width:30px; transform:rotate(8deg);"></div>`;
+      const snake = `<svg class="jungle-snake" viewBox="0 0 40 76" width="34" height="64" style="left:calc(24% + 22px); top:32px;" fill="none">
+        <path d="M6 2 C2 10 16 14 12 24 C8 34 22 36 18 48 C14 60 26 58 22 70" stroke="#3C7D3E" stroke-width="6" stroke-linecap="round"/>
+        <path d="M6 2 C2 10 16 14 12 24 C8 34 22 36 18 48 C14 60 26 58 22 70" stroke="#6FBE6F" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 5"/>
+        <circle cx="6" cy="2" r="3.4" fill="#3C7D3E"/>
+        <circle cx="5" cy="1.2" r="0.8" fill="#EAF3E9"/>
+      </svg>`;
+      // S-curved river winding across the swamp floor, with a lighter shimmer trace on top
+      const river = `<svg class="jungle-river" viewBox="0 0 300 60" preserveAspectRatio="none">
+        <path d="M-10,22 C40,4 70,44 120,26 C170,8 200,48 250,28 C270,20 285,24 310,18"
+              stroke="#3E7D89" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <path d="M-10,22 C40,4 70,44 120,26 C170,8 200,48 250,28 C270,20 285,24 310,18"
+              stroke="#8FD9E8" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.55"
+              stroke-dasharray="3 9" style="animation:riverFlow 2.2s linear infinite;"/>
+      </svg>`;
+      return `<div class="garden-scene">${canopies}${trunks}${branch}${snake}${river}</div>`;
+    }
+    // mountain — green ground under a plain blue sky, the full-grown tree stands on its own
+    return `<div class="garden-scene"></div>`;
+  }
+
   function renderGarden(){
     const total = totalFullGrown();
     const idx = currentThemeIndex();
-    const theme = THEMES[idx];
+    // Which theme is shown in the big card at top — defaults to the current
+    // (still-growing) theme, but the person can tap any unlocked theme below
+    // to look back at it, even after moving on to a later one.
+    if(selectedGardenTheme===null || selectedGardenTheme>idx) selectedGardenTheme = idx;
+    const viewIdx = selectedGardenTheme;
+    const theme = THEMES[viewIdx];
+    const viewingCurrent = viewIdx===idx;
     const itemsHere = itemsInCurrentTheme();
     const isLast = idx === THEMES.length-1;
     const plantWord = theme.plant==='cactus' ? '선인장' : '나무';
 
     const box = document.getElementById('gardenCurrentBox');
-    const pct = isLast ? 100 : Math.min(100, Math.round((itemsHere/THEME_TARGET)*100));
-    const progressLine = isLast
-      ? `${plantWord} ${itemsHere}그루를 모았어요 · 마지막 테마예요`
-      : `${plantWord} ${itemsHere}/${THEME_TARGET}그루 · 다음 테마까지 ${THEME_TARGET-itemsHere}그루 남았어요`;
-    const strip = itemsHere>0
-      ? Array.from({length:itemsHere}).map(()=>`<div class="garden-tree-mini">${svgPlant(3, theme)}</div>`).join('')
+    box.setAttribute('data-theme', theme.id);
+    const shownCount = viewingCurrent ? itemsHere : THEME_TARGET;
+    const pct = (!viewingCurrent || isLast) ? 100 : Math.min(100, Math.round((itemsHere/THEME_TARGET)*100));
+    const progressLine = !viewingCurrent
+      ? `${plantWord} ${THEME_TARGET}/${THEME_TARGET}그루 완성 · 지난 테마를 둘러보는 중`
+      : (isLast
+          ? `${plantWord} ${itemsHere}그루를 모았어요 · 마지막 테마예요`
+          : `${plantWord} ${itemsHere}/${THEME_TARGET}그루 · 다음 테마까지 ${THEME_TARGET-itemsHere}그루 남았어요`);
+    const strip = shownCount>0
+      ? Array.from({length:shownCount}).map(()=>`<div class="garden-tree-mini">${svgPlant(3, theme)}</div>`).join('')
       : `<span class="gtc-empty">아직 이 테마에서 모은 ${plantWord}가 없어요</span>`;
     box.innerHTML = `
+      ${sceneOverlay(theme.id)}
       <div class="gtc-icon">${theme.icon}</div>
       <div class="gtc-label serif">${theme.label} 테마</div>
       <div class="gtc-progress">${progressLine}</div>
@@ -1670,7 +1871,8 @@
       else if(i===THEMES.length-1) sub = `${word} ${itemsHere}그루 모으는 중`;
       else sub = `${word} ${itemsHere}/${THEME_TARGET}그루 모으는 중`;
       const status = locked ? '잠김' : done ? '완료' : '진행중';
-      return `<div class="theme-row${locked?' locked':''}">
+      const selectedCls = (!locked && i===viewIdx) ? ' selected-row' : '';
+      return `<div class="theme-row${locked?' locked':''}${selectedCls}" data-theme-idx="${i}">
         <div class="tr-icon">${t.icon}</div>
         <div class="tr-info">
           <div class="tr-name">${t.label}</div>
@@ -1678,13 +1880,30 @@
         </div>
         <div class="tr-status">${status}</div>
       </div>`;
-    }).join('');
+    }).join('') + `
+      <div class="theme-row locked">
+        <div class="tr-icon">🔒</div>
+        <div class="tr-info">
+          <div class="tr-name">다음 테마</div>
+          <div class="tr-sub">Coming Soon</div>
+        </div>
+        <div class="tr-status">잠김</div>
+      </div>`;
+
+    list.querySelectorAll('.theme-row[data-theme-idx]').forEach(row=>{
+      row.addEventListener('click', ()=>{
+        const i = Number(row.getAttribute('data-theme-idx'));
+        if(i>idx){ toast('이전 테마를 다 채우면 열려요'); return; }
+        selectedGardenTheme = i;
+        renderGarden();
+      });
+    });
 
     const freezeBox = document.getElementById('freezeBox');
     freezeBox.innerHTML = `
       <div class="fb-icon2">🍎</div>
       <div class="fb-count">보유한 일시멈춤 ${garden.freezeTokens||0}개</div>
-      <div class="fb-desc">풍성한 ${plantWord}를 포함해 완성한 나무·선인장을 ${FRUIT_REQUIREMENT}그루 이상 모으면, 나무가 열매를 맺듯 매달 일시멈춤이 하나씩 생겨요.<br>하루를 기록하지 못해도 일시멈춤이 있으면 연속 기록이 끊기지 않아요.</div>
+      <div class="fb-desc">풍성한 나무·선인장을 포함해 완성한 것을 ${FRUIT_REQUIREMENT}그루 이상 모으면, 나무가 열매를 맺듯 매달 일시멈춤이 하나씩 생겨요.<br>하루를 기록하지 못해도 일시멈춤이 있으면 연속 기록이 끊기지 않아요.</div>
     `;
   }
 
@@ -1902,6 +2121,7 @@
   document.getElementById('forgotPinConfirm').addEventListener('click', async ()=>{
     settings.pinEnabled=false; settings.pin=null;
     settings.securityQuestion=null; settings.securityAnswer=null;
+    settings.pinFailCount=0; settings.pinLockUntil=null;
     await storageSet('settings', settings);
     document.getElementById('forgotPinOverlay').classList.remove('active');
     unlocked=true;
@@ -1937,8 +2157,57 @@
     }
   }
 
+  /* ---------------- PIN lockout (exponential backoff) ---------------- */
+  // Attempts 1-4: just a plain "PIN이 일치하지 않아요" toast, no lockout.
+  // Attempt 5: 30s lock. Attempt 6: 1m. Attempt 7: 2m. Attempt 8: 4m. Doubling forever after.
+  function lockoutSecondsFor(failCount){
+    if(failCount < 5) return 0;
+    return 30 * Math.pow(2, failCount-5);
+  }
+  function currentLockRemainingMs(){
+    if(!settings.pinLockUntil) return 0;
+    return Math.max(0, settings.pinLockUntil - Date.now());
+  }
+  function fmtLockTime(ms){
+    const totalSec = Math.ceil(ms/1000);
+    const m = Math.floor(totalSec/60);
+    const s = totalSec%60;
+    return m>0 ? `${m}분 ${String(s).padStart(2,'0')}초` : `${s}초`;
+  }
+  function stopLockoutTimer(){
+    if(lockoutTimer){ clearInterval(lockoutTimer); lockoutTimer=null; }
+  }
+  function applyLockUI(remainingMs){
+    const pad = document.getElementById('lockPad');
+    const box = document.getElementById('lockoutBox');
+    const timeEl = document.getElementById('lockoutTime');
+    if(remainingMs>0){
+      pad.classList.add('locked');
+      box.classList.add('show');
+      timeEl.textContent = fmtLockTime(remainingMs);
+    } else {
+      pad.classList.remove('locked');
+      box.classList.remove('show');
+    }
+  }
+  function startLockoutWatch(){
+    stopLockoutTimer();
+    const tick = ()=>{
+      const remaining = currentLockRemainingMs();
+      applyLockUI(remaining);
+      if(remaining<=0){
+        stopLockoutTimer();
+        pendingPinBuffer='';
+        renderPinDots('lockDots',0,false);
+      }
+    };
+    tick();
+    lockoutTimer = setInterval(tick, 1000);
+  }
+
   // Lock pad
-  buildPad('lockPad', (k)=>{
+  buildPad('lockPad', async (k)=>{
+    if(currentLockRemainingMs()>0) return; // ignore taps while locked
     if(k==='⌫'){ pendingPinBuffer = pendingPinBuffer.slice(0,-1); renderPinDots('lockDots', pendingPinBuffer.length,false); return; }
     if(pendingPinBuffer.length>=4) return;
     pendingPinBuffer += k;
@@ -1947,12 +2216,27 @@
       if(pendingPinBuffer===settings.pin){
         unlocked=true;
         pendingPinBuffer='';
+        settings.pinFailCount=0;
+        settings.pinLockUntil=null;
+        await storageSet('settings', settings);
+        stopLockoutTimer();
+        applyLockUI(0);
         renderHome();
         showView('home');
       } else {
         renderPinDots('lockDots',4,true);
-        setTimeout(()=>{ pendingPinBuffer=''; renderPinDots('lockDots',0,false); },500);
-        toast('PIN이 일치하지 않아요');
+        settings.pinFailCount = (settings.pinFailCount||0) + 1;
+        const lockSec = lockoutSecondsFor(settings.pinFailCount);
+        if(lockSec>0){
+          settings.pinLockUntil = Date.now() + lockSec*1000;
+          await storageSet('settings', settings);
+          setTimeout(()=>{ pendingPinBuffer=''; renderPinDots('lockDots',0,false); startLockoutWatch(); }, 500);
+          toast('PIN을 여러 번 틀렸어요');
+        } else {
+          await storageSet('settings', settings);
+          setTimeout(()=>{ pendingPinBuffer=''; renderPinDots('lockDots',0,false); },500);
+          toast('PIN이 일치하지 않아요');
+        }
       }
     }
   });
@@ -1998,7 +2282,7 @@
   async function init(){
     entries = await storageGet('entries', []);
     entries.sort((a,b)=> a.date < b.date ? 1 : -1);
-    settings = await storageGet('settings', {pinEnabled:false, pin:null, fontSize:'md'});
+    settings = await storageGet('settings', {pinEnabled:false, pin:null, fontSize:'md', pinFailCount:0, pinLockUntil:null});
     garden = await storageGet('garden', {freezeTokens:0, lastFreezeGrantMonth:null, freezeUsedDates:[]});
     applyFontSize(settings.fontSize || 'md');
 
@@ -2011,6 +2295,9 @@
     if(settings.pinEnabled && settings.pin){
       renderPinDots('lockDots',0,false);
       showView('pinlock');
+      const remaining = currentLockRemainingMs();
+      if(remaining>0) startLockoutWatch();
+      else applyLockUI(0);
     } else {
       renderHome();
       showView('home');
